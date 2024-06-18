@@ -27,8 +27,15 @@ class Team(Base):
         return f"id: {self.id}, team name: {self.team_name}"
 
 
+class League(Base):
+    __tablename__ = "league"
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    league_name: orm.Mapped[str] = orm.mapped_column(sa.String(100))
+
+
 class Season(Base):
     __tablename__ = "season"
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+
 
 
