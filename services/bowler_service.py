@@ -3,8 +3,8 @@ from data.models import Bowler
 import data.db_session as db_session
 
 
-def create_bowler(first_name):
-    new_bowler = Bowler(first_name=first_name)
+def create_bowler(first_name: str, last_name: str, handicap: int = 0):
+    new_bowler = Bowler(first_name=first_name, last_name=last_name)
     session = db_session.create_session()
     session.add(new_bowler)
     session.commit()
