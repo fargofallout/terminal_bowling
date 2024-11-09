@@ -7,9 +7,12 @@ import data.db_session as db_session
 def configure_db():
 
     file = (Path(__file__).parent / "db" / "db.sqlite")
-    db_session.global_init(file)
+    db_session.global_init(file.as_posix())
+    # print(f"what if it's file as posix? {file.as_posix()}, {type(file.as_posix())}")
 
 def main():
+    print("I assume I hit this")
+    configure_db()
 
     exit_prog = False
 

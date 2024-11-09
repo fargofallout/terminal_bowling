@@ -23,7 +23,11 @@ def global_init(db_file):
     engine = sa.create_engine(f"sqlite:///{db_file.strip()}")
     __db_session = orm.sessionmaker(bind=engine)
 
-    import bowler
+    import data.bowler
+    import data.team
+    import data.alley
+    import data.league
+    import data.season
 
     SqlAlchemyBase.metadata.create_all(engine)
 
