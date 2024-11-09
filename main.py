@@ -2,6 +2,7 @@ import sqlalchemy as sa
 from pathlib import Path
 
 import data.db_session as db_session
+import bowler_utils
 
 
 def configure_db():
@@ -11,7 +12,6 @@ def configure_db():
     # print(f"what if it's file as posix? {file.as_posix()}, {type(file.as_posix())}")
 
 def main():
-    print("I assume I hit this")
     configure_db()
 
     exit_prog = False
@@ -34,7 +34,9 @@ def main():
             case "1":
                 print("doing 1 stuff")
             case "2":
-                print("doing 2 stuff")
+                print("about to call the function")
+                bowler_utils.create_bowler()
+                print("did I return?")
             case "3":
                 print("doing 3 stuff")
             case "4":

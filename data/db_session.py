@@ -17,7 +17,7 @@ def global_init(db_file):
         raise Exception("db file must be specified")
 
     folder = Path(db_file).parent
-    print(f"this is the folder I'm going to create: {folder}")
+    # print(f"this is the folder I'm going to create: {folder}")
     folder.mkdir(parents=True, exist_ok=True)
 
     engine = sa.create_engine(f"sqlite:///{db_file.strip()}")
