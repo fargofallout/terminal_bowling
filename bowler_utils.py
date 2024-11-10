@@ -58,6 +58,5 @@ def get_all_bowlers():
         result = session.scalars(sa.select(Bowler).order_by(Bowler.id)).all()
         return result
     finally:
-        print("do I get here with that return statement above?")
         session.close()
 
