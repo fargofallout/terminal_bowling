@@ -55,7 +55,8 @@ def get_all_bowlers():
     session = db_session.create_session()
     try:
         result = session.execute(sa.select(Bowler).order_by(Bowler.id))
-        print(f"uhhhhh {result}")
+        for each_whatever in result:
+            print(f"uhhhhh {each_whatever}")
     finally:
         session.close()
 
