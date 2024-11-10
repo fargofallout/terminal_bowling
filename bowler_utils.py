@@ -8,9 +8,11 @@ def bowler_menu():
     return_to_main = False
 
     while not return_to_main:
-        print("1 to add a new bolwer")
+        print("\n1 to add a new bolwer")
+        print("2 to list all bowlers")
+        print("3 to modify a bowler")
+        print("4 to delete a bowler")
         print("x to exit")
-        print("I dunno, other stuff will be here eventually\n")
 
         user_choice = input(":").strip()
 
@@ -20,7 +22,7 @@ def bowler_menu():
                 bowler_name = input(":").strip()
                 name_regex = regex.search(r"(\w+) (\w+)", bowler_name)
                 if not name_regex:
-                    print("wtf, need to do something here")
+                    print("inputted name is not in the correct format, please try again")
                 else:
                     first_name = name_regex.group(1)
                     last_name = name_regex.group(2)
