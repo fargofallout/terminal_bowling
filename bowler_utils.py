@@ -31,8 +31,9 @@ def bowler_menu():
                     new_bowler = create_bowler(first_name, last_name)
                     print(f"here's the new bolwer: {new_bowler}")
             case "2":
-                print("going to list all the bowlers")
-                get_all_bowlers()
+                bowlers = get_all_bowlers()
+                for each_bowler in bowlers:
+                    print(f"{each_bowler}")
             case "x":
                 return_to_main = True
             case _:
@@ -54,9 +55,9 @@ def create_bowler(first_name, last_name):
 def get_all_bowlers():
     session = db_session.create_session()
     try:
-        result = session.execute(sa.select(Bowler).order_by(Bowler.id))
-        for each_whatever in result:
-            print(f"uhhhhh {each_whatever}")
+        result = session.scalars(sa.select(Bowler).order_by(Bowler.id)).all()
+        return result
     finally:
+        print("do I get here with that return statement above?")
         session.close()
 

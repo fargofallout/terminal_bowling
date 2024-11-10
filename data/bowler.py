@@ -10,5 +10,5 @@ class Bowler(SqlAlchemyBase):
     last_name: str = sa.Column(sa.String, index=True)
 
     def __repr__(self):
-        return f"does this work? {self.first_name}"
+        return f"{self.id}: {self.first_name} {self.last_name}"
 
