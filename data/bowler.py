@@ -9,3 +9,6 @@ class Bowler(SqlAlchemyBase):
     first_name: str = sa.Column(sa.String, index=True)
     last_name: str = sa.Column(sa.String, index=True)
 
+    def __repr__():
+        print(f"does this work? {first_name}")
+

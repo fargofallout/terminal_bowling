@@ -34,9 +34,7 @@ def main():
             case "1":
                 print("doing 1 stuff")
             case "2":
-                print("about to call the function")
                 bowler_utils.bowler_menu()
-                print("did I return?")
             case "3":
                 print("doing 3 stuff")
             case "4":

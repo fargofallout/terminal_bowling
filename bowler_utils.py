@@ -1,4 +1,5 @@
 import regex
+import sqlalchemy as sa
 
 from data.bowler import Bowler
 from data import db_session
@@ -27,8 +28,11 @@ def bowler_menu():
                     first_name = name_regex.group(1)
                     last_name = name_regex.group(2)
 
-                    create_bowler(first_name, last_name)
-                    print("was that successful?")
+                    new_bowler = create_bowler(first_name, last_name)
+                    print(f"here's the new bolwer: {new_bowler}")
+            case "2":
+                print("going to list all the bowlers")
+                get_all_bowlers()
             case "x":
                 return_to_main = True
             case _:
@@ -42,10 +46,16 @@ def create_bowler(first_name, last_name):
     try:
         session.add(new_bolwer)
         session.commit()
+        return f"{new_bolwer.id} {new_bolwer.first_name} {new_bolwer.last_name}"
     finally:
         session.close()
 
 
 def get_all_bowlers():
-    pass
+    session = db_session.create_session()
+    try:
+        result = session.execute(sa.select(Bowler).order_by(Bowler.id))
+        print(f"uhhhhh {result}")
+    finally:
+        session.close()
 
