@@ -35,7 +35,7 @@ def main():
                 print("doing 1 stuff")
             case "2":
                 print("about to call the function")
-                bowler_utils.create_bowler()
+                bowler_utils.bowler_menu()
                 print("did I return?")
             case "3":
                 print("doing 3 stuff")
