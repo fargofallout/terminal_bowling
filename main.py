@@ -19,12 +19,12 @@ def main():
     while not exit_prog:
         # print(f"is this this current file? {__file__}")
         # print(f"I assume this is the full path: {Path(__file__).parent}")
-        print("1 to begin a new week")
+        print("\n1 to begin a new week")
         print("2 for player menu")
         print("3 for team menu")
         print("4 for league menu")
         print("5 for alley menu")
-        print(f"x to exit\n")
+        print(f"x to exit")
 
         user_choice = input(":").strip()
 
