@@ -3,6 +3,7 @@ from pathlib import Path
 
 import data.db_session as db_session
 import bowler_utils
+import team_utils
 
 
 def configure_db():
@@ -36,7 +37,7 @@ def main():
             case "2":
                 bowler_utils.bowler_menu()
             case "3":
-                print("doing 3 stuff")
+                team_utils.team_menu()
             case "4":
                 print("doing 4 stuff")
             case "5":

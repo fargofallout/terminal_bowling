@@ -42,8 +42,7 @@ def bowler_menu():
             case "x" | "X":
                 return_to_main = True
             case _:
-                print("you should choose 1 for now")
-                return_to_main = True
+                print("not a valid choice, please try again")
 
 
 def modify_bolwer_menu():
@@ -134,6 +133,8 @@ def delete_bowler_menu():
                     print(f"that id wasn't found - please try again")
             case "x" | "X":
                 return_to_modify_menu = True
+            case _:
+                print("invalid choice, please try again")
 
 def create_bowler(first_name, last_name):
     new_bolwer = Bowler(first_name=first_name, last_name=last_name)
