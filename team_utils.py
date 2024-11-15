@@ -60,15 +60,34 @@ def modify_team_menu():
             case r"\d+":
                 # CONTINUE HERE: check to make sure the team returned exists
                 team_to_modify = get_team_by_id(int(modify_input))
-                get_new_team_name_menu(modify_input)
+                if team_to_modify:
+                    get_new_team_name_menu(team_to_modify)
+                else:
+                    print("that team doesn't exist, please try again")
             case _:
                 print("not a valid option, please try again")
 
 
-def get_new_team_name_menu(team_id):
-    session = db_session.create_session()
+def get_new_team_name_menu(team_to_modify):
+    return_to_modify_menu = False
 
-    pass
+    while not return_to_modify_menu:
+        print(f"\nthe team you're modifying is {team_to_modify}")
+        print(f"enter the the new name")
+        print(f"or enter 'x' to return to the previous menu")
+        print(f"(if the team name is 'x', then I guess I'll have to think about how to handle that)")
+        user_choice = input(":").strip()
+
+        match user_choice:
+            case "x" | "X":
+                return_to_modify_menu = True
+            case _:
+                new_team_name = modify_team(team_to_modify.id, user_choice)
+                if not new_team_name:
+                    print("that it inexplicably wasn't found, even though I checked it once")
+                else:
+                    print(f"new team name: {new_team_name.team_name}")
+                    return_to_modify_menu = True
 
 
 def create_team(team_name):

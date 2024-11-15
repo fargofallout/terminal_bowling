@@ -95,11 +95,11 @@ def get_new_name_menu(bowler):
         match REqual(user_choice):
             case r"\w+ \w+":
                 name_split = user_choice.split(" ")
-                new_bowler = modify_bowler(bowler.id, name_split[0], name_split[1])
-                if not new_bowler:
+                new_bowler_name = modify_bowler(bowler.id, name_split[0], name_split[1])
+                if not new_bowler_name:
                     print("that bowler was not found, please try again")
                 else:
-                    print(f"new bowler name: {new_bowler.first_name} {new_bowler.last_name}")
+                    print(f"new bowler name: {new_bowler_name.first_name} {new_bowler_name.last_name}")
                     return_to_modify_menu = True
             case "x" | "X":
                 return_to_modify_menu = True
