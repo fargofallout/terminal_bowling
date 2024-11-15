@@ -70,6 +70,7 @@ def modify_bolwer_menu():
                 user_to_modify = get_bowler_by_id(int(modify_input))
                 if user_to_modify:
                     get_new_name_menu(user_to_modify)
+                    return_to_bowler_menu = True
                 else:
                     print("that id wasn't found, please try again")
             case "x" | "X":
@@ -95,8 +96,11 @@ def get_new_name_menu(bowler):
             case r"\w+ \w+":
                 name_split = user_choice.split(" ")
                 new_bowler = modify_bowler(bowler.id, name_split[0], name_split[1])
-                print(f"new bowler name: {new_bowler.first_name} {new_bowler.last_name}")
-                return_to_modify_menu = True
+                if not new_bowler:
+                    print("that bowler was not found, please try again")
+                else:
+                    print(f"new bowler name: {new_bowler.first_name} {new_bowler.last_name}")
+                    return_to_modify_menu = True
             case "x" | "X":
                 return_to_modify_menu = True
             case _:
@@ -188,11 +192,14 @@ def modify_bowler(bowler_id, new_first_name, new_last_name):
 
     try:
         # session.execute(sa.update(Bowler),[{"id":bowler_id, "first_name": new_first_name, "last_name": new_last_name},],)
-        bowler = session.scalars(sa.select(Bowler).where(Bowler.id == bowler_id)).one()
-        bowler.first_name = new_first_name
-        bowler.last_name = new_last_name
-        session.commit()
-        return bowler
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id == bowler_id)).one_or_none()
+        if not bowler:
+            return ""
+        else:
+            bowler.first_name = new_first_name
+            bowler.last_name = new_last_name
+            session.commit()
+            return bowler
 
     finally:
         session.close()
