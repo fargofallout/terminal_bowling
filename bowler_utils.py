@@ -9,10 +9,10 @@ def bowler_menu():
     return_to_main = False
 
     while not return_to_main:
-        print("\n1 to add a new bolwer")
-        print("2 to list all bowlers")
-        print("3 to modify a bowler")
-        print("4 to delete a bowler")
+        print("\n1 to add a new bolwer") #done
+        print("2 to list all bowlers") #done
+        print("3 to modify a bowler") #done
+        print("4 to delete a bowler") #done (but needs improvement)
         print("x to exit")
 
         user_choice = input(":").strip()
@@ -37,12 +37,14 @@ def bowler_menu():
                     print(f"{each_bowler}")
             case "3":
                 modify_bolwer_menu()
-                
+            case "4":
+                delete_bowler_menu()
             case "x" | "X":
                 return_to_main = True
             case _:
                 print("you should choose 1 for now")
                 return_to_main = True
+
 
 def modify_bolwer_menu():
 
@@ -78,7 +80,6 @@ def modify_bolwer_menu():
 
 
 def get_new_name_menu(bowler):
-    #this idea is courtesy https://discuss.python.org/t/structural-pattern-matching-should-permit-regex-string-matches/22700/8
     class REqual(str):
         def __eq__(self, pattern):
             return regex.fullmatch(pattern, self)
@@ -86,19 +87,53 @@ def get_new_name_menu(bowler):
     return_to_modify_menu = False
 
     while not return_to_modify_menu:
-        print(f"\nThe bowler being modified is {bowler}")
+        print(f"\nThe bowler you'd like to modify is: {bowler}")
         print("enter the new name in the format 'firstname lastname'")
         print("enter 'x' to return to previous menu")
         user_choice = input(":").strip()
 
         match REqual(user_choice):
             case r"\w+ \w+":
-                print("that's a valid name and I would presumably change this bowler to that?")
+                name_split = user_choice.split(" ")
+                new_bowler = modify_bowler(bowler.id, name_split[0], name_split[1])
+                print(f"new bowler name: {new_bowler.first_name} {new_bowler.last_name}")
+                return_to_modify_menu = True
             case "x" | "X":
                 return_to_modify_menu = True
             case _:
                 print("invalid choice")
 
+
+def delete_bowler_menu():
+    class REqual(str):
+        def __eq__(self, pattern):
+            return regex.fullmatch(pattern, self)
+
+    return_to_modify_menu = False
+
+    while not return_to_modify_menu:
+        print(f"\nenter 'l' to list all bowlers")
+        print(f"enter the bowler's id to delete them")
+        print(f"enter 'x' to return to the previous menu")
+        print(f"and look, I'll expand this later and create something to search by name, but")
+        print(f"I don't think I'm going to be doing a lot of deleting, so it isn't a priority right now")
+
+        user_choice = input(":").strip()
+
+        match REqual(user_choice):
+            case "l" | "L":
+                all_bowlers = get_all_bowlers()
+                for each_bowler in all_bowlers:
+                    print(f"{each_bowler}")
+            case r"\d+":
+                successful_deletion = delete_bowler(user_choice)
+                if successful_deletion:
+                    print("bowler has been deleted (this needs to be improved - add the name and whatnot)")
+                    return_to_modify_menu = True
+                else:
+                    print(f"that id wasn't found - please try again")
+            case "x" | "X":
+                return_to_modify_menu = True
 
 def create_bowler(first_name, last_name):
     new_bolwer = Bowler(first_name=first_name, last_name=last_name)
@@ -108,6 +143,21 @@ def create_bowler(first_name, last_name):
         session.add(new_bolwer)
         session.commit()
         return f"{new_bolwer.id} {new_bolwer.first_name} {new_bolwer.last_name}"
+    finally:
+        session.close()
+
+
+def delete_bowler(id):
+    session = db_session.create_session()
+
+    try:
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).one_or_none()
+        if bowler:
+            session.delete(bowler)
+            session.commit()
+            return True
+        else:
+            return False
     finally:
         session.close()
 
@@ -131,6 +181,18 @@ def get_all_bowlers():
     finally:
         session.close()
 
+
 def modify_bowler(bowler_id, new_first_name, new_last_name):
-    pass
+    session = db_session.create_session()
+
+    try:
+        # session.execute(sa.update(Bowler),[{"id":bowler_id, "first_name": new_first_name, "last_name": new_last_name},],)
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id == bowler_id)).one()
+        bowler.first_name = new_first_name
+        bowler.last_name = new_last_name
+        session.commit()
+        return bowler
+
+    finally:
+        session.close()
 
