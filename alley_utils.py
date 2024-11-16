@@ -19,13 +19,15 @@ def alley_menu():
 
         match user_choice:
             case "1":
-                print("enter the alley name")
+                print("\nenter the alley name")
                 print("and, optionally, the city name in parentheses")
                 alley_input = input(":").strip()
-                alley_regex = regex.search(r"([^\n\(\)]+) *(?:\(([^\n\(\)]+)\))?", alley_input)
+                alley_regex = regex.search(r"([^\n\(\)]+)(?: *\(([^\n\(\)]+)\))?", alley_input)
                 if alley_regex:
                     alley_name = alley_regex.group(1).strip()
-                    alley_city = alley_regex.group(2).strip()
+                    alley_city = alley_regex.group(2)
+                    if alley_city:
+                        alley_city = alley_city.strip()
                     new_alley = add_alley(alley_name, alley_city)
                     print(f"{new_alley} has been created")
                 else:
@@ -68,23 +70,46 @@ def modify_alley_menu():
             case "x" | "X":
                 return_to_alley_menu = True
             case r"\d+":
-                get_alley_or_city_menu()
+                alley = get_alley_by_id(user_input)
+                if alley:
+                    get_alley_or_city_menu(alley)
+                else:
+                    print("not a valid id, please try again")
             case _:
                 print("not a valid input, please try again")
 
 
-def get_alley_or_city_menu():
+def get_alley_or_city_menu(alley):
     return_to_modification_menu = False
 
     while not return_to_modification_menu:
-        print("good lord, this is a lot of menuing")
+        print(f"\nthe alley you're modifying is {alley}")
+        print("enter 1 followed by the new alley name to change just the alley name")
+        print("enter 2 followed by the city name to change just the city name")
+        print("enter 3 followed by the alley name and the city name in parentheses to change both")
+        print("e.g., 3 flaherty's (roseville)")
         print("enter 'x' to return to the previous menu")
 
         user_input = input(":").strip()
 
-        match user_input:
+        match REqual(user_input):
             case "x" | "X":
                 return_to_modification_menu = True
+            case r"1 +([^\n]+)":
+                print("doing just the alley")
+
+            case r"2 +([^\n]+)":
+                print("doing just the city")
+            case r"3 +([^\n]+) +\(([^\n\(\)]+)\)":
+                print("doing both")
+                # one_match = regex.search(r"1 +([^\n]+)", user_input)
+                # two_match = regex.search(r"2 +([^\n]+)", user_input)
+                # three_match = regex.search(r"3 +([^\n]+)", user_input)
+                # if one_match:
+                # elif two_match:
+                # elif three_match:
+                # else:
+                    # print("not a valid input, please try again")
             case _:
                 print("yeah, I have to do stuff here")
 
@@ -122,4 +147,18 @@ def get_all_alleys():
         return all_alleys
     finally:
         session.close()
+
+
+def get_alley_by_id(alley_id):
+    session = db_session.create_session()
+    try:
+        alley = session.scalars(sa.select(Alley).where(Alley.id==alley_id)).one_or_none()
+        return alley
+    finally:
+        session.close()
+
+
+class REqual(str):
+    def __eq__(self, pattern):
+        return regex.fullmatch(pattern, self)
 
