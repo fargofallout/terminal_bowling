@@ -4,6 +4,7 @@ from pathlib import Path
 import data.db_session as db_session
 import bowler_utils
 import team_utils
+import alley_utils
 
 
 def configure_db():
@@ -41,7 +42,7 @@ def main():
             case "4":
                 print("doing 4 stuff")
             case "5":
-                print("doing 5 stuff")
+                alley_utils.alley_menu()
             case "x" | "X":
                 exit_prog = True
             case _:
