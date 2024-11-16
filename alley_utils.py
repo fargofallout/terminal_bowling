@@ -48,10 +48,6 @@ def alley_menu():
 
 
 def modify_alley_menu():
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_alley_menu = False
     while not return_to_alley_menu:
         print("\nenter 'l' to list all alleys")
@@ -81,7 +77,6 @@ def modify_alley_menu():
 
 def get_alley_or_city_menu(alley):
     return_to_modification_menu = False
-
     while not return_to_modification_menu:
         print(f"\nthe alley you're modifying is {alley}")
         print("enter 1 followed by the new alley name to change just the alley name")
@@ -96,22 +91,14 @@ def get_alley_or_city_menu(alley):
             case "x" | "X":
                 return_to_modification_menu = True
             case r"1 +([^\n]+)":
-                print("doing just the alley")
-
+                one_match = regex.search(r"1 +([^\n]+)", user_input)
             case r"2 +([^\n]+)":
-                print("doing just the city")
+                two_match = regex.search(r"2 +([^\n]+)", user_input)
+                print(f"this is the one where I need to keep the lane - prev lane: {alley.alley_name}, new city: {two_match.group(1)}")
             case r"3 +([^\n]+) +\(([^\n\(\)]+)\)":
-                print("doing both")
-                # one_match = regex.search(r"1 +([^\n]+)", user_input)
-                # two_match = regex.search(r"2 +([^\n]+)", user_input)
-                # three_match = regex.search(r"3 +([^\n]+)", user_input)
-                # if one_match:
-                # elif two_match:
-                # elif three_match:
-                # else:
-                    # print("not a valid input, please try again")
+                three_match = regex.search(r"3 +([^\n]+) +\(([^\n\(\)]+)\)", user_input)
             case _:
-                print("yeah, I have to do stuff here")
+                print("that's an invalid entry, please try again")
 
 
 def add_alley(alley_name, city_name=None):
