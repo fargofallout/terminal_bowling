@@ -21,7 +21,7 @@ def main():
         # print(f"is this this current file? {__file__}")
         # print(f"I assume this is the full path: {Path(__file__).parent}")
         print("\n1 to begin a new week")
-        print("2 for player menu")
+        print("2 for bowler menu")
         print("3 for team menu")
         print("4 for league menu")
         print("5 for alley menu")

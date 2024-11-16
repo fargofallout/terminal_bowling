@@ -12,8 +12,8 @@ def team_menu():
     while not return_to_main:
         print(f"\n1 to add a new team") #done
         print(f"2 to list all teams") #done
-        print(f"3 to modify a team")
-        print(f"4 to delete a team")
+        print(f"3 to modify a team") #done
+        print(f"4 to delete a team") #done
         print(f"x to exit")
 
         user_choice = input(":").strip()
@@ -26,10 +26,14 @@ def team_menu():
                 print(f"new team: {new_team.id}: {new_team.team_name}")
             case "2":
                 all_teams = get_all_teams()
+                print("****************************")
                 for each_team in all_teams:
                     print(each_team)
+                print("****************************")
             case "3":
                 modify_team_menu()
+            case "4":
+                delete_team_menu()
             case "x":
                 return_to_main = True
             case _:
@@ -53,12 +57,13 @@ def modify_team_menu():
         match REqual(modify_input):
             case "l" | "L":
                 all_teams = get_all_teams()
+                print("****************************")
                 for each_team in all_teams:
                     print(f"{each_team}")
+                print("****************************")
             case "x" | "X":
                 return_to_team_menu = True
             case r"\d+":
-                # CONTINUE HERE: check to make sure the team returned exists
                 team_to_modify = get_team_by_id(int(modify_input))
                 if team_to_modify:
                     get_new_team_name_menu(team_to_modify)
@@ -84,10 +89,45 @@ def get_new_team_name_menu(team_to_modify):
             case _:
                 new_team_name = modify_team(team_to_modify.id, user_choice)
                 if not new_team_name:
-                    print("that it inexplicably wasn't found, even though I checked it once")
+                    print("it inexplicably wasn't found, even though I checked it once")
                 else:
                     print(f"new team name: {new_team_name.team_name}")
                     return_to_modify_menu = True
+
+
+def delete_team_menu():
+    class REqual(str):
+        def __eq__(self, pattern):
+            return regex.fullmatch(pattern, self)
+
+    return_to_team_menu = False
+
+    while not return_to_team_menu:
+        print(f"\nenter 'l' to list all teams")
+        print("enter the team's id to delete them")
+        print("enter 'x' to return to the previous menu")
+
+        user_choice = input(":").strip()
+
+        match REqual(user_choice):
+            case "l" | "L":
+                all_teams = get_all_teams()
+                print("****************************")
+                for each_team in all_teams:
+                    print(f"{each_team}")
+                print("****************************")
+            case r"\d+":
+                successful_deletion = delete_team(user_choice)
+                if successful_deletion:
+                    print("team has been deleted")
+                    return_to_team_menu = True
+                else:
+                    print(f"that id wasn't found - please try again")
+
+            case "x" | "X":
+                return_to_team_menu = True
+            case _:
+                print("not a valid choice, please try again")
 
 
 def create_team(team_name):
@@ -136,4 +176,17 @@ def get_all_teams():
         session.close()
 
 
+def delete_team(team_id):
+    session = db_session.create_session()
+
+    try:
+        team = session.scalars(sa.select(Team).where(Team.id==team_id)).one_or_none()
+        if team:
+            session.delete(team)
+            session.commit()
+            return True
+        else:
+            return False
+    finally:
+        session.close()
 

@@ -32,9 +32,11 @@ def bowler_menu():
                     print(f"here's the new bolwer: {new_bowler}")
             case "2":
                 bowlers = get_all_bowlers()
-                print("\nHere are all bowlers and their IDs:\n")
+                print("****************************")
+                print("Here are all bowlers and their IDs:")
                 for each_bowler in bowlers:
                     print(f"{each_bowler}")
+                print("****************************")
             case "3":
                 modify_bolwer_menu()
             case "4":
@@ -64,12 +66,14 @@ def modify_bolwer_menu():
             case "l" | "L":
                 # probably need to format this more nicely so it's across multiple columns
                 all_bowlers = get_all_bowlers()
+                print("****************************")
                 for each_bowler in all_bowlers:
                     print(each_bowler)
+                print("****************************")
             case r"\d+":
-                user_to_modify = get_bowler_by_id(int(modify_input))
-                if user_to_modify:
-                    get_new_name_menu(user_to_modify)
+                bowler_to_modify = get_bowler_by_id(int(modify_input))
+                if bowler_to_modify:
+                    get_new_name_menu(bowler_to_modify)
                     return_to_bowler_menu = True
                 else:
                     print("that id wasn't found, please try again")
@@ -126,8 +130,10 @@ def delete_bowler_menu():
         match REqual(user_choice):
             case "l" | "L":
                 all_bowlers = get_all_bowlers()
+                print("****************************")
                 for each_bowler in all_bowlers:
                     print(f"{each_bowler}")
+                print("****************************")
             case r"\d+":
                 successful_deletion = delete_bowler(user_choice)
                 if successful_deletion:
@@ -170,10 +176,10 @@ def delete_bowler(id):
 def get_bowler_by_id(id):
     session = db_session.create_session()
     try:
-        user = session.scalars(sa.select(Bowler).where(Bowler.id==id)).one_or_none()
-        # print(f"here's that user: {user}")
-        # print(f"id? {user.id}")
-        return user
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).one_or_none()
+        # print(f"here's that bowler: {bowler}")
+        # print(f"id? {bowler.id}")
+        return bowler
     finally:
         session.close()
 
