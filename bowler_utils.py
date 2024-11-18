@@ -91,7 +91,9 @@ def get_new_name_menu(bowler):
     return_to_modify_menu = False
 
     while not return_to_modify_menu:
-        print(f"\nThe bowler you'd like to modify is: {bowler}")
+        print("\n****************************")
+        print(f"The bowler you'd like to modify is: {bowler}")
+        print("****************************")
         print("enter the new name in the format 'firstname lastname'")
         print("enter 'x' to return to previous menu")
         user_choice = input(":").strip()

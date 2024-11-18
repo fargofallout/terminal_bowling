@@ -77,7 +77,9 @@ def get_new_team_name_menu(team_to_modify):
     return_to_modify_menu = False
 
     while not return_to_modify_menu:
-        print(f"\nthe team you're modifying is {team_to_modify}")
+        print("\n****************************")
+        print(f"the team you're modifying is {team_to_modify}")
+        print("****************************")
         print(f"enter the the new name")
         print(f"or enter 'x' to return to the previous menu")
         print(f"(if the team name is 'x', then I guess I'll have to think about how to handle that)")

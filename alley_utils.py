@@ -21,6 +21,7 @@ def alley_menu():
             case "1":
                 print("\nenter the alley name")
                 print("and, optionally, the city name in parentheses")
+                print("e.g., flaherty's arden bowl (roseville)")
                 alley_input = input(":").strip()
                 alley_regex = regex.search(r"([^\n\(\)]+)(?: *\(([^\n\(\)]+)\))?", alley_input)
                 if alley_regex:
@@ -78,7 +79,10 @@ def modify_alley_menu():
 def get_alley_or_city_menu(alley):
     return_to_modification_menu = False
     while not return_to_modification_menu:
-        print(f"\nthe alley you're modifying is {alley}")
+        print("\n****************************")
+        print(f"the alley you're modifying is {alley}")
+        print("****************************")
+
         print("enter 1 followed by the new alley name to change just the alley name")
         print("enter 2 followed by the city name to change just the city name")
         print("enter 3 followed by the alley name and the city name in parentheses to change both")
@@ -92,11 +96,19 @@ def get_alley_or_city_menu(alley):
                 return_to_modification_menu = True
             case r"1 +([^\n]+)":
                 one_match = regex.search(r"1 +([^\n]+)", user_input)
+                modified_alley = modify_alley(alley.id, new_name=one_match.group(1))
+                print(f"\nnew alley: {modified_alley}\n")
+                return_to_modification_menu = True
             case r"2 +([^\n]+)":
                 two_match = regex.search(r"2 +([^\n]+)", user_input)
-                print(f"this is the one where I need to keep the lane - prev lane: {alley.alley_name}, new city: {two_match.group(1)}")
+                modified_alley = modify_alley(alley.id, new_city=two_match.group(1))
+                print(f"\nnew alley: {modified_alley}\n")
+                return_to_modification_menu = True
             case r"3 +([^\n]+) +\(([^\n\(\)]+)\)":
                 three_match = regex.search(r"3 +([^\n]+) +\(([^\n\(\)]+)\)", user_input)
+                modified_alley = modify_alley(alley.id, new_name=three_match.group(1), new_city=three_match.group(2))
+                print(f"\nnew alley: {modified_alley}\n")
+                return_to_modification_menu = True
             case _:
                 print("that's an invalid entry, please try again")
 
@@ -113,14 +125,20 @@ def add_alley(alley_name, city_name=None):
         session.close()
 
 
-def modify_alley_name(alley_id, new_name):
+def modify_alley(alley_id, new_name=None, new_city=None):
     session = db_session.create_session()
     try:
         alley = session.scalars(sa.select(Alley).where(Alley.id==alley_id)).one_or_none()
         if not alley:
             return ""
         else:
-            alley.alley_name = new_name
+            if new_name and not new_city:
+                alley.alley_name = new_name
+            elif new_city and not new_name:
+                alley.alley_city = new_city
+            else:
+                alley.alley_name = new_name
+                alley.alley_city = new_city
             session.commit()
             return alley
     finally:
