@@ -2,9 +2,7 @@ import sqlalchemy as sa
 from pathlib import Path
 
 import data.db_session as db_session
-import bowler_utils
-import team_utils
-import alley_utils
+from utils import bowler_utils, team_utils, alley_utils, league_utils
 
 
 def configure_db():
@@ -40,7 +38,7 @@ def main():
             case "3":
                 team_utils.team_menu()
             case "4":
-                print("doing 4 stuff")
+                league_utils.league_menu()
             case "5":
                 alley_utils.alley_menu()
             case "x" | "X":
