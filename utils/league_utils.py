@@ -33,6 +33,8 @@ def league_menu():
                     league_name = league_match.group(2)
                     alley_id = league_match.group(1)
                     new_league = create_league(league_name=league_name, alley_id=alley_id)
+                    print(f"do I know it actually worked? {new_league}")
+                    print(f"ok, what's the alley? {new_league.alley}")
                 print(f"")
             case "l" | "L":
                 all_leagues = get_all_leagues()

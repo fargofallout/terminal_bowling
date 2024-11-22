@@ -16,7 +16,7 @@ class Alley(SqlAlchemyBase):
     alley_city: Mapped[str] = mapped_column(index=True)
     # alley_city: str = sa.Column(sa.String, index=True)
 
-    leagues: Mapped[list["League"]] = relationship(back_populates="alley")
+    leagues: Mapped[list["League"]] = relationship(back_populates="alley", lazy="dynamic")
 
     def __repr__(self):
         if self.alley_city:
