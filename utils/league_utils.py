@@ -3,6 +3,7 @@ import sqlalchemy as sa
 
 from data import db_session
 from data.league import League
+from utils.alley_utils import get_alley_by_id, get_all_alleys
 
 
 def league_menu():
@@ -21,27 +22,56 @@ def league_menu():
 
         match user_choice:
             case "1":
-                print("\nenter alley id and league name in this format:")
-                print("1 flaherty's tuesday nights")
-                league_regex = regex.compile(r"^(\d+) +([^\n]+)$")
-                league_input = input(":").strip()
-                league_match = league_regex.search(league_input)
-                if not league_match:
-                    print("that input is invalid, please try again")
-                else:
-                    print(f"id: {league_match.group(1)}, league name: {league_match.group(2)}")
-                    league_name = league_match.group(2)
-                    alley_id = league_match.group(1)
-                    new_league = create_league(league_name=league_name, alley_id=alley_id)
-                    print(f"do I know it actually worked? {new_league}")
-                    print(f"ok, what's the alley? {new_league.alley}")
-                print(f"")
+                create_league_menu()
+            case "2":
+                modify_league_menu()
             case "l" | "L":
                 all_leagues = get_all_leagues()
+                print("****************************")
                 for each_league in all_leagues:
                     print(f"{each_league}")
+                print("****************************")
+            case "a" | "A":
+                all_alleys = get_all_alleys()
+                print("****************************")
+                for each_alley in all_alleys:
+                    print(f"{each_alley}")
+                print("****************************")
             case "x" | "X":
                 return_to_main = True
+            case _:
+                print("not a valid input, please try again")
+
+
+def create_league_menu():
+    return_to_league_menu = False
+    print("\nenter alley id and league name in this format:")
+    print("1 flaherty's tuesday nights")
+    print("or 'x' to return to the main league menu")
+    league_input = input(":").strip()
+    match REqual(league_input):
+        case "x" | "X":
+            return_to_league_menu = True
+        case r"^(\d+) +([^\n]+)$":
+            league_match = regex.search(r"^(\d+) +([^\n]+)$", league_input)
+            alley_id = league_match.group(1)
+            league_name = league_match.group(2)
+            print(f"alley: {alley_id}, league: {league_name}")
+            alley = get_alley_by_id(alley_id)
+            if not alley:
+                print("alley id does not exist, please try again")
+            else:
+                new_league = create_league(league_name, alley_id)
+                print(f"new league: {new_league}, alley: {new_league.alley}")
+                return_to_league_menu = True
+        case _:
+            print("not a valid input, please try again")
+
+
+def modify_league_menu():
+    print("\n'l' to list leagues")
+    print("'m' to list alleys")
+    print("")
 
 
 def create_league(league_name, alley_id):
@@ -51,6 +81,7 @@ def create_league(league_name, alley_id):
     try:
         session.add(new_league)
         session.commit()
+        alley_name = new_league.alley.alley_name
         return new_league
     finally:
         session.close()
@@ -64,5 +95,11 @@ def get_all_leagues():
         return all_leagues
     finally:
         session.close()
+
+
+class REqual(str):
+    def __eq__(self, pattern):
+        return regex.fullmatch(pattern, self)
+
 
 
