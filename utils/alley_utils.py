@@ -3,6 +3,7 @@ import sqlalchemy as sa
 
 from data import db_session
 from data.alley import Alley
+from utils.utils import parse_global_options
 
 
 def alley_menu():
@@ -11,11 +12,12 @@ def alley_menu():
 
     while not return_to_main:
         print("\n1 to add a new alley")
-        print("2 to list all alleys")
-        print("3 to modify an existing alley")
+        print("2 to modify an existing alley")
         print("press x to return to main menu")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match user_choice:
             case "1":
@@ -33,15 +35,8 @@ def alley_menu():
                     print(f"{new_alley} has been created")
                 else:
                     print("not even sure how I managed, but that alley name doesn't work - try again")
-
             case "2":
-                all_alleys = get_all_alleys()
-                print("****************************")
-                for each_alley in all_alleys:
-                    print(each_alley)
-                print("****************************")
-            case "3":
-                modify_alley_menu()
+                modbfy_alley_menu()
             case "x" | "X":
                 return_to_main = True
             case _:
@@ -51,19 +46,14 @@ def alley_menu():
 def modify_alley_menu():
     return_to_alley_menu = False
     while not return_to_alley_menu:
-        print("\nenter 'l' to list all alleys")
-        print("enter alley's id you would like to modify")
+        print("\nenter alley's id you would like to modify")
         print("enter 'x' to return to main alley menu")
 
         user_input = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match REqual(user_input):
-            case "l" | "L":
-                all_alleys = get_all_alleys()
-                print("****************************")
-                for each_alley in all_alleys:
-                    print(each_alley)
-                print("****************************")
             case "x" | "X":
                 return_to_alley_menu = True
             case r"\d+":
@@ -90,6 +80,8 @@ def get_alley_or_city_menu(alley):
         print("enter 'x' to return to the previous menu")
 
         user_input = input(":").strip()
+        if parse_global_options(user_input):
+            continue
 
         match REqual(user_input):
             case "x" | "X":
@@ -141,15 +133,6 @@ def modify_alley(alley_id, new_name=None, new_city=None):
                 alley.alley_city = new_city
             session.commit()
             return alley
-    finally:
-        session.close()
-
-
-def get_all_alleys():
-    session = db_session.create_session()
-    try:
-        all_alleys = session.scalars(sa.select(Alley).order_by(Alley.id)).all()
-        return all_alleys
     finally:
         session.close()
 

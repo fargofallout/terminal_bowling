@@ -3,6 +3,7 @@ import sqlalchemy as sa
 
 from data import db_session
 from data.team import Team
+from utils.utils import parse_global_options
 
 
 def team_menu():
@@ -11,12 +12,13 @@ def team_menu():
 
     while not return_to_main:
         print(f"\n1 to add a new team") #done
-        print(f"2 to list all teams") #done
-        print(f"3 to modify a team") #done
-        print(f"4 to delete a team") #done
+        print(f"2 to modify a team") #done
+        print(f"3 to delete a team") #done
         print(f"x to exit")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match user_choice:
             case "1":
@@ -25,14 +27,8 @@ def team_menu():
                 new_team = create_team(team_name)
                 print(f"new team: {new_team.id}: {new_team.team_name}")
             case "2":
-                all_teams = get_all_teams()
-                print("****************************")
-                for each_team in all_teams:
-                    print(each_team)
-                print("****************************")
-            case "3":
                 modify_team_menu()
-            case "4":
+            case "3":
                 delete_team_menu()
             case "x":
                 return_to_main = True
@@ -49,18 +45,13 @@ def modify_team_menu():
 
     while not return_to_team_menu:
         print("\nenter the id of the team to modify")
-        print("enter 'L' to list all teams")
         print("enter 'X' to exit")
 
         modify_input = input(":").strip()
+        if parse_global_options(modify_input):
+            continue
 
         match REqual(modify_input):
-            case "l" | "L":
-                all_teams = get_all_teams()
-                print("****************************")
-                for each_team in all_teams:
-                    print(f"{each_team}")
-                print("****************************")
             case "x" | "X":
                 return_to_team_menu = True
             case r"\d+":
@@ -105,19 +96,14 @@ def delete_team_menu():
     return_to_team_menu = False
 
     while not return_to_team_menu:
-        print(f"\nenter 'l' to list all teams")
-        print("enter the team's id to delete them")
+        print("\nenter the team's id to delete them")
         print("enter 'x' to return to the previous menu")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match REqual(user_choice):
-            case "l" | "L":
-                all_teams = get_all_teams()
-                print("****************************")
-                for each_team in all_teams:
-                    print(f"{each_team}")
-                print("****************************")
             case r"\d+":
                 successful_deletion = delete_team(user_choice)
                 if successful_deletion:
@@ -165,15 +151,6 @@ def get_team_by_id(team_id):
     try:
         team = session.scalars(sa.select(Team).where(Team.id==team_id)).one_or_none()
         return team
-    finally:
-        session.close()
-
-
-def get_all_teams():
-    session = db_session.create_session()
-    try:
-        result = session.scalars(sa.select(Team).order_by(Team.id)).all()
-        return result
     finally:
         session.close()
 

@@ -14,6 +14,12 @@ def configure_db():
 def main():
     configure_db()
 
+    print("\n********************")
+    print("in almost all menus, enter b to list all bowlers, t to list all teams,")
+    print("l to list all leagues, a to list all alleys, and s to list all seasons")
+    print("and h for help?")
+    print("********************")
+
     exit_prog = False
 
     while not exit_prog:

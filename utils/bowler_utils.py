@@ -3,6 +3,7 @@ import sqlalchemy as sa
 
 from data.bowler import Bowler
 from data import db_session
+from utils.utils import parse_global_options
 
 
 def bowler_menu():
@@ -10,12 +11,13 @@ def bowler_menu():
 
     while not return_to_main:
         print("\n1 to add a new bolwer") #done
-        print("2 to list all bowlers") #done
-        print("3 to modify a bowler") #done
-        print("4 to delete a bowler") #done (but needs improvement)
+        print("2 to modify a bowler") #done
+        print("3 to delete a bowler") #done (but needs improvement)
         print("x to exit")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match user_choice:
             case "1":
@@ -31,15 +33,8 @@ def bowler_menu():
                     new_bowler = create_bowler(first_name, last_name)
                     print(f"here's the new bolwer: {new_bowler}")
             case "2":
-                bowlers = get_all_bowlers()
-                print("****************************")
-                print("Here are all bowlers and their IDs:")
-                for each_bowler in bowlers:
-                    print(f"{each_bowler}")
-                print("****************************")
-            case "3":
                 modify_bolwer_menu()
-            case "4":
+            case "3":
                 delete_bowler_menu()
             case "x" | "X":
                 return_to_main = True
@@ -58,18 +53,13 @@ def modify_bolwer_menu():
 
     while not return_to_bowler_menu:
         print("\nenter the id of the bowler to modify")
-        print("or enter 'L' to list all bowlers")
         print("enter 'x' to exit")
         modify_input = input(":").strip()
 
+        if parse_global_options(modify_input):
+            continue
+
         match REqual(modify_input):
-            case "l" | "L":
-                # probably need to format this more nicely so it's across multiple columns
-                all_bowlers = get_all_bowlers()
-                print("****************************")
-                for each_bowler in all_bowlers:
-                    print(each_bowler)
-                print("****************************")
             case r"\d+":
                 bowler_to_modify = get_bowler_by_id(int(modify_input))
                 if bowler_to_modify:
@@ -121,21 +111,17 @@ def delete_bowler_menu():
     return_to_modify_menu = False
 
     while not return_to_modify_menu:
-        print(f"\nenter 'l' to list all bowlers")
-        print(f"enter the bowler's id to delete them")
+        print(f"\nenter the bowler's id to delete them")
         print(f"enter 'x' to return to the previous menu")
         print(f"and look, I'll expand this later and create something to search by name, but")
         print(f"I don't think I'm going to be doing a lot of deleting, so it isn't a priority right now")
 
         user_choice = input(":").strip()
 
+        if parse_global_options(user_choice):
+            continue
+
         match REqual(user_choice):
-            case "l" | "L":
-                all_bowlers = get_all_bowlers()
-                print("****************************")
-                for each_bowler in all_bowlers:
-                    print(f"{each_bowler}")
-                print("****************************")
             case r"\d+":
                 successful_deletion = delete_bowler(user_choice)
                 if successful_deletion:
@@ -182,15 +168,6 @@ def get_bowler_by_id(id):
         # print(f"here's that bowler: {bowler}")
         # print(f"id? {bowler.id}")
         return bowler
-    finally:
-        session.close()
-
-
-def get_all_bowlers():
-    session = db_session.create_session()
-    try:
-        result = session.scalars(sa.select(Bowler).order_by(Bowler.id)).all()
-        return result
     finally:
         session.close()
 

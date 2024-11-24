@@ -3,7 +3,8 @@ import sqlalchemy as sa
 
 from data import db_session
 from data.league import League
-from utils.alley_utils import get_alley_by_id, get_all_alleys
+from utils.alley_utils import get_alley_by_id
+from utils.utils import parse_global_options
 
 
 def league_menu():
@@ -19,24 +20,14 @@ def league_menu():
         print("'x' to return to main menu")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         match user_choice:
             case "1":
                 create_league_menu()
             case "2":
                 modify_league_menu()
-            case "l" | "L":
-                all_leagues = get_all_leagues()
-                print("****************************")
-                for each_league in all_leagues:
-                    print(f"{each_league}")
-                print("****************************")
-            case "a" | "A":
-                all_alleys = get_all_alleys()
-                print("****************************")
-                for each_alley in all_alleys:
-                    print(f"{each_alley}")
-                print("****************************")
             case "x" | "X":
                 return_to_main = True
             case _:
@@ -45,6 +36,7 @@ def league_menu():
 
 def create_league_menu():
     return_to_league_menu = False
+    # CONTINUE HERE: need to finish the global options parsing in this file
     print("\nenter alley id and league name in this format:")
     print("1 flaherty's tuesday nights")
     print("or 'x' to return to the main league menu")
@@ -70,11 +62,6 @@ def create_league_menu():
 
 def modify_league_menu():
     return_to_league_menu = False
-    # CONTINUE HERE: I think I'm going to create a function that takes in certain letters and 
-    # spits out a list of that item, so then it can be a global thing and I don't have to 
-    # list the options for listing leagues or whatever over and over again
-    # not sure how I'd make it truly global, though - it seems like I'd still have to account
-    # for it on every match statement - hmmmmmmmmm
     print("\n'l' to list leagues")
     print("'m' to list alleys")
     print("*********")
