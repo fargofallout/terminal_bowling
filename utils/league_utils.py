@@ -69,9 +69,32 @@ def create_league_menu():
 
 
 def modify_league_menu():
+    return_to_league_menu = False
+    # CONTINUE HERE: I think I'm going to create a function that takes in certain letters and 
+    # spits out a list of that item, so then it can be a global thing and I don't have to 
+    # list the options for listing leagues or whatever over and over again
+    # not sure how I'd make it truly global, though - it seems like I'd still have to account
+    # for it on every match statement - hmmmmmmmmm
     print("\n'l' to list leagues")
     print("'m' to list alleys")
-    print("")
+    print("*********")
+    print("to modify a league, use the format 'ml [league id] [new leauge name]', e.g.,")
+    print("ml 5 new league name")
+    print("*********")
+    print("to modify the alley associated with a league, use the format 'ma [league id] [new alley id]', e.g.,")
+    print("ma 5 10")
+    print("*********")
+    league_input = input(":").strip()
+
+    match REqual(league_input):
+        case "l" | "L":
+            print("listing leagues")
+        case "a" | "A":
+            print("listing alleys")
+        case "x" | "X":
+            return_to_league_menu = True
+        case _:
+            print("not a valid input, please try again")
 
 
 def create_league(league_name, alley_id):
