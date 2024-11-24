@@ -3,6 +3,7 @@ from pathlib import Path
 
 import data.db_session as db_session
 from utils import bowler_utils, team_utils, alley_utils, league_utils
+from utils.utils import parse_global_options
 
 
 def configure_db():
@@ -33,6 +34,8 @@ def main():
         print(f"x to exit")
 
         user_choice = input(":").strip()
+        if parse_global_options(user_choice):
+            continue
 
         # print(f"entered {user_choice}")
 

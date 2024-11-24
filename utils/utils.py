@@ -4,6 +4,7 @@ from data import db_session
 from data.bowler import Bowler
 from data.team import Team
 from data.alley import Alley
+from data.league import League
 
 
 def parse_global_options(user_input):
@@ -27,6 +28,13 @@ def parse_global_options(user_input):
             print("****************************")
             for each_alley in all_alleys:
                 print(each_alley)
+            print("****************************")
+            return True
+        case "l" | "L":
+            all_leagues = get_all_leagues()
+            print("****************************")
+            for each_league in all_leagues:
+                print(each_league)
             print("****************************")
             return True
         case _:
@@ -56,6 +64,15 @@ def get_all_alleys():
     try:
         all_alleys = session.scalars(sa.select(Alley).order_by(Alley.id)).all()
         return all_alleys
+    finally:
+        session.close()
+
+
+def get_all_leagues():
+    session = db_session.create_session()
+    try:
+        all_leagues = session.scalars(sa.select(League).order_by(League.id)).all()
+        return all_leagues
     finally:
         session.close()
 
