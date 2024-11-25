@@ -54,10 +54,10 @@ def create_league_menu():
                 alley = get_alley_by_id(alley_id)
                 if not alley:
                     print("alley id does not exist, please try again")
-                else:
-                    new_league = create_league(league_name, alley_id)
-                    print(f"new league: {new_league}, alley: {new_league.alley}")
-                    return_to_league_menu = True
+                    continue
+                new_league = create_league(league_name, alley_id)
+                print(f"new league: {new_league}, alley: {new_league.alley}")
+                return_to_league_menu = True
             case _:
                 print("not a valid input, please try again")
 
@@ -65,13 +65,13 @@ def create_league_menu():
 def modify_league_menu():
     return_to_league_menu = False
     while not return_to_league_menu:
-        print("\n*********")
+        print("\n*************************************************")
         print("to modify a league, use the format 'ml [league id] [new leauge name]', e.g.,")
         print("ml 5 new league name")
-        print("*********")
+        print("*************************************************")
         print("to modify the alley associated with a league, use the format 'ma [league id] [new alley id]', e.g.,")
         print("ma 5 10")
-        print("*********")
+        print("*************************************************")
 
         league_input = input(":").strip()
         if parse_global_options(league_input):
@@ -80,8 +80,30 @@ def modify_league_menu():
         match REqual(league_input):
             case "x" | "X":
                 return_to_league_menu = True
-            case r"ma +\d+ +[^\n]+":
-                print("I wonder if I need to do some sort of global regex option to force ignoring case?")
+            case r"^ml +(\d+) +([^\n]+)$":
+                modify_league_match = regex.search(r"^ml +(\d+) +([^\n]+)$", league_input)
+                league_id = modify_league_match.group(1)
+                new_league_name = modify_league_match.group(2)
+                league = get_league_by_id(league_id)
+                if not league:
+                    print("that league does not exist, please try again")
+                    continue
+                new_league = modify_league(league_id, new_name=new_league_name)
+                if not new_league:
+                    print("dammit, something went wrong changing the league name")
+            case r"^ma +(\d+) +(\d+)$":
+                modify_alley_match = regex.search(r"^ma +(\d+) +(\d+)$", league_input)
+                league_id = modify_alley_match.group(1)
+                new_alley_id = modify_alley_match.group(2)
+                league = get_league_by_id(league_id)
+                alley = get_alley_by_id(new_alley_id)
+                if not league:
+                    print("that league id is not valid, please try again")
+                    continue
+                if not alley:
+                    print("that alley id is not valid, please try again")
+                    continue
+                print("forgot to print something here")
             case _:
                 print("not a valid input, please try again")
 
@@ -95,6 +117,35 @@ def create_league(league_name, alley_id):
         session.commit()
         alley_name = new_league.alley.alley_name
         return new_league
+    finally:
+        session.close()
+
+
+def modify_league(league_id, new_name=None, new_alley_id=None):
+    session = db_session.create_session()
+    try:
+        league = session.scalars(sa.select(League).where(League.id==league_id)).one_or_none()
+        if not league:
+            print("not sure why I'd ever hit this since I check it in the menu function")
+            return ""
+        else:
+            if new_name:
+                league.league_name = new_name
+            elif new_alley_id:
+                league.alley_id = new_alley_id
+            else:
+                print("why would I ever hit this?")
+        session.commit()
+        return league
+    finally:
+        session.close()
+
+
+def get_league_by_id(league_id):
+    session = db_session.create_session()
+    try:
+        league = session.scalars(sa.select(League).where(League.id==league_id)).one_or_none()
+        return league
     finally:
         session.close()
 

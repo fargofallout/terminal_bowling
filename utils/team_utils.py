@@ -164,7 +164,7 @@ def delete_team(team_id):
 
 class REqual(str):
     def __eq__(self, pattern):
-        return regex.fullmatch(pattern, self)
+        return regex.fullmatch(pattern, self, regex.IGNORECASE)
 
 
 

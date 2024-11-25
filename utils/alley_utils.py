@@ -148,5 +148,5 @@ def get_alley_by_id(alley_id):
 
 class REqual(str):
     def __eq__(self, pattern):
-        return regex.fullmatch(pattern, self)
+        return regex.fullmatch(pattern, self, regex.IGNORECASE)
 
