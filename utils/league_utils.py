@@ -80,6 +80,8 @@ def modify_league_menu():
         match REqual(league_input):
             case "x" | "X":
                 return_to_league_menu = True
+            case r"ma +\d+ +[^\n]+":
+                print("I wonder if I need to do some sort of global regex option to force ignoring case?")
             case _:
                 print("not a valid input, please try again")
 
@@ -99,7 +101,7 @@ def create_league(league_name, alley_id):
 
 class REqual(str):
     def __eq__(self, pattern):
-        return regex.fullmatch(pattern, self)
+        return regex.fullmatch(pattern, self, regex.IGNORECASE)
 
 
 

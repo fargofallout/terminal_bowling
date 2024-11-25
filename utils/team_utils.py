@@ -37,10 +37,6 @@ def team_menu():
 
 
 def modify_team_menu():
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_team_menu = False
 
     while not return_to_team_menu:
@@ -89,10 +85,6 @@ def get_new_team_name_menu(team_to_modify):
 
 
 def delete_team_menu():
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_team_menu = False
 
     while not return_to_team_menu:
@@ -168,4 +160,11 @@ def delete_team(team_id):
             return False
     finally:
         session.close()
+
+
+class REqual(str):
+    def __eq__(self, pattern):
+        return regex.fullmatch(pattern, self)
+
+
 

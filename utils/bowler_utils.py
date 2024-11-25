@@ -43,19 +43,13 @@ def bowler_menu():
 
 
 def modify_bolwer_menu():
-
-    #this idea is courtesy https://discuss.python.org/t/structural-pattern-matching-should-permit-regex-string-matches/22700/8
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_bowler_menu = False
 
     while not return_to_bowler_menu:
         print("\nenter the id of the bowler to modify")
         print("enter 'x' to exit")
-        modify_input = input(":").strip()
 
+        modify_input = input(":").strip()
         if parse_global_options(modify_input):
             continue
 
@@ -74,18 +68,14 @@ def modify_bolwer_menu():
 
 
 def get_new_name_menu(bowler):
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_modify_menu = False
-
     while not return_to_modify_menu:
         print("\n****************************")
         print(f"The bowler you'd like to modify is: {bowler}")
         print("****************************")
         print("enter the new name in the format 'firstname lastname'")
         print("enter 'x' to return to previous menu")
+
         user_choice = input(":").strip()
 
         match REqual(user_choice):
@@ -104,10 +94,6 @@ def get_new_name_menu(bowler):
 
 
 def delete_bowler_menu():
-    class REqual(str):
-        def __eq__(self, pattern):
-            return regex.fullmatch(pattern, self)
-
     return_to_modify_menu = False
 
     while not return_to_modify_menu:
@@ -117,7 +103,6 @@ def delete_bowler_menu():
         print(f"I don't think I'm going to be doing a lot of deleting, so it isn't a priority right now")
 
         user_choice = input(":").strip()
-
         if parse_global_options(user_choice):
             continue
 
@@ -188,4 +173,11 @@ def modify_bowler(bowler_id, new_first_name, new_last_name):
 
     finally:
         session.close()
+
+
+#this idea is courtesy https://discuss.python.org/t/structural-pattern-matching-should-permit-regex-string-matches/22700/8
+class REqual(str):
+    def __eq__(self, pattern):
+        return regex.fullmatch(pattern, self, regex.IGNORECASE)
+
 
