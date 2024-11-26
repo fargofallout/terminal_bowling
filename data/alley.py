@@ -8,7 +8,7 @@ from data.league import League
 
 
 class Alley(SqlAlchemyBase):
-    __tablename__ = "alley"
+    __tablename__ = "alley_table"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     alley_name: Mapped[str] = mapped_column(index=True)

@@ -10,6 +10,7 @@ from utils.utils import parse_global_options
 def league_menu():
     return_to_main = False
     while not return_to_main:
+        # TODO: need to add the option to delete leagues
         print("\n****************************")
         print("NOTE: you will need to associate an alley with this league to be able to create it")
         print("****************************")
@@ -65,6 +66,7 @@ def create_league_menu():
 def modify_league_menu():
     return_to_league_menu = False
     while not return_to_league_menu:
+        # TODO: I don't like how this looks in the terminal
         print("\n*************************************************")
         print("to modify a league, use the format 'ml [league id] [new leauge name]', e.g.,")
         print("ml 5 new league name")
@@ -80,6 +82,7 @@ def modify_league_menu():
         match REqual(league_input):
             case "x" | "X":
                 return_to_league_menu = True
+
             case r"^ml +(\d+) +([^\n]+)$":
                 modify_league_match = regex.search(r"^ml +(\d+) +([^\n]+)$", league_input)
                 league_id = modify_league_match.group(1)
@@ -91,6 +94,8 @@ def modify_league_menu():
                 new_league = modify_league(league_id, new_name=new_league_name)
                 if not new_league:
                     print("dammit, something went wrong changing the league name")
+                return_to_league_menu = True
+
             case r"^ma +(\d+) +(\d+)$":
                 modify_alley_match = regex.search(r"^ma +(\d+) +(\d+)$", league_input)
                 league_id = modify_alley_match.group(1)
@@ -103,7 +108,11 @@ def modify_league_menu():
                 if not alley:
                     print("that alley id is not valid, please try again")
                     continue
-                print("forgot to print something here")
+                new_league = modify_league(league_id, new_alley_id=new_alley_id)
+                if not new_league:
+                    print("dammit, not sure what could have went wrong with changing the league's alley")
+                return_to_league_menu = True
+
             case _:
                 print("not a valid input, please try again")
 
