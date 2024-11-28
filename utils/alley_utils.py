@@ -29,6 +29,7 @@ def alley_menu():
                 if alley_regex:
                     alley_name = alley_regex.group(1).strip()
                     alley_city = alley_regex.group(2)
+                    print(f"what is this? {alley_city}")
                     if alley_city:
                         alley_city = alley_city.strip()
                     new_alley = add_alley(alley_name, alley_city)

@@ -3,7 +3,8 @@ import sqlalchemy as sa
 
 from data import db_session
 from data.season import Season
-from utils.utils import parse_global_options
+from utils.utils import parse_global_options, parse_formula
+from utils.league_utils import get_league_by_id
 
 
 def season_menu():
@@ -25,7 +26,6 @@ def season_menu():
                 new_season_menu()
             case _:
                 print("not a valid input, please try again")
-                # CONTINUE HERE: need to add seaons and whatnot
 
 
 def new_season_menu():
@@ -48,9 +48,16 @@ def new_season_menu():
             case "x" | "X":
                 return_to_season_menu = True
             case r"^(\d+) +\[([^\n\[\]]+)\] +\(([^\n]+)\)$":
-                print("that appears to be a valid input")
                 season_match = regex.search("^(\d+) +\[([^\n\[\]]+)\] +\(([^\n]+)\)$", user_input)
-                print(f"id: {season_match.group(1)}, season: {season_match.group(2)}, formula: {season_match.group(3)}")
+                league_id = season_match.group(1)
+                season_timeframe = season_match.group(2)
+                handicap_formula = season_match.group(3)
+                league = get_league_by_id(league_id)
+                if not league:
+                    print("not a valid league id, please try again")
+                    continue
+                # print(f"id: {season_match.group(1)}, season: {season_match.group(2)}, formula: {season_match.group(3)}")
+                formula_parsed = parse_formula(handicap_formula)
             case _:
                 print("that's not a valid input, please try again")
 

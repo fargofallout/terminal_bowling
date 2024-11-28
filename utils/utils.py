@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+import regex
 
 from data import db_session
 from data.bowler import Bowler
@@ -77,4 +78,70 @@ def get_all_leagues():
         session.close()
 
 
+def parse_formula(formula):
+    print(f"this is the formula I need to parse: {formula}")
+    # word_char_regex = regex.compile(r"\b(\B+)\b")
+
+    current_token = ""
+    token_list = []
+    for char in formula:
+        if regex.search(r"\d", char):
+            current_token += char
+        elif regex.search(r"\.", char):
+            current_token += char
+        elif regex.search(r"[a-zA-Z]+", char):
+            current_token += char
+        else:
+            if len(current_token) > 0:
+                token_list.append(current_token)
+                current_token = ""
+            if char != " ":
+                if char in ["+", "-", "*", "/", "(", ")"]:
+                    token_list.append(char)
+                else:
+                    print(f"{char} is not a valid token? please try again")
+                    return False
+    if len(current_token) > 0:
+        token_list.append(current_token)
+        current_token = ""
+
+    print(token_list)
+
+    # make sure formula has the same number of open and closed parenthesis
+    paren_balance = 0
+    for each_token in token_list:
+        if each_token == "(":
+            paren_balance += 1
+        elif each_token == ")":
+            paren_balance -= 1
+
+    if paren_balance != 0:
+        if paren_balance < 0:
+            print("there are too many closed parenthesis, please re-enter the formula")
+        elif paren_balance > 0:
+            print("there are too many open parenthesis, please re-enter the formula")
+        return False
+
+    # make sure at most one unique variable is used
+    variable_used = ""
+    word_regex = regex.compile(r"([a-zA-Z]+)")
+    for each_token in token_list:
+        word_match = word_regex.search(each_token)
+        if word_match and not variable_used:
+            variable_used = each_token
+        elif word_match and variable_used:
+            if each_token != variable_used:
+                print(f"at least two different variables were used: {variable_used} and {each_token}")
+                print("I'm really trying to not make this too complicated, just use one variable for average")
+                print("if two is actually necessary, I guess I'll deal with it")
+                return False
+            # print(f"during testing - this is the first var {variable_used}, and this is the current: {each_token}")
+
+    # no variable in the formula
+    if not variable_used:
+        print("no variable in the league formula? that seems unlikely - try again (unless I know what I'm doing, in which case I have to rewrite)")
+        return False
+
+    print("still going")
+    dummy_average = 170
 

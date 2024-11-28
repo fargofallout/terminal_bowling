@@ -2,6 +2,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+from typing import Optional
 
 from data.model_base import SqlAlchemyBase
 from data.league import League
@@ -13,7 +14,8 @@ class Alley(SqlAlchemyBase):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     alley_name: Mapped[str] = mapped_column(index=True)
     # alley_name: str = sa.Column(sa.String, index=True)
-    alley_city: Mapped[str] = mapped_column(index=True)
+    # alley_city: Mapped[Optional[str]]
+    alley_city: Mapped[Optional[str]] = mapped_column(index=True)
     # alley_city: str = sa.Column(sa.String, index=True)
 
     leagues: Mapped[list["League"]] = relationship(back_populates="alley", lazy="dynamic")
