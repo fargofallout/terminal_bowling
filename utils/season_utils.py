@@ -31,14 +31,13 @@ def season_menu():
 def new_season_menu():
     return_to_season_menu = False
     while not return_to_season_menu:
-        print("\n************")
+        print("\n***********************************************")
         print("note: a season has to be attached to a league")
-        print("enter a season in the format [league id] [season timeframe] [handicap formula]")
-        print("example:")
-        print("1 [2024-2025] ((220 - average) * 0.9)")
-        print("notes: put the season timeframe in square brackets and the formula in parentheses")
+        print("enter these three parts of a season: [league id] [season timeframe] [handicap formula]")
+        print("in this format: 1 [2024-2025] ((220 - average) * 0.9)")
+        print("more notes: put the season timeframe in square brackets and the formula in parentheses")
         print("for the formula, make sure to wrap each pair of values in parentheses")
-        print("I'm omly accepting 'average' as a variable for now, but if I encounter something else, I'll deal with it")
+        print("I'm omly accepting one unique variable, but if I ever encounter something else in a league, I'll deal with it")
 
         user_input = input(":").strip()
         if parse_global_options(user_input):
@@ -47,6 +46,7 @@ def new_season_menu():
         match REqual(user_input):
             case "x" | "X":
                 return_to_season_menu = True
+            # user input is in this format: 1 [timeframe] (formula)
             case r"^(\d+) +\[([^\n\[\]]+)\] +\(([^\n]+)\)$":
                 season_match = regex.search("^(\d+) +\[([^\n\[\]]+)\] +\(([^\n]+)\)$", user_input)
                 league_id = season_match.group(1)
@@ -56,7 +56,8 @@ def new_season_menu():
                 if not league:
                     print("not a valid league id, please try again")
                     continue
-                # print(f"id: {season_match.group(1)}, season: {season_match.group(2)}, formula: {season_match.group(3)}")
+
+                # token_list will be something like ['(', '220', '-', 'avg', ')', '*', '0.90']
                 token_list = parse_formula(handicap_formula)
                 if not token_list:
                     print("something went wrong with parsing the formula (hopefully I printed the problem)")
@@ -64,6 +65,7 @@ def new_season_menu():
                     continue
 
                 print("formula passed validation - please enter a sample average to see what the handicap returned is")
+
                 provided_numerical_average = False
                 while not provided_numerical_average:
                     sample_average = input(":").strip()
@@ -71,7 +73,6 @@ def new_season_menu():
                         print("that's not a valid number to test, please try again, or enter 'x' if you want to bail")
 
                     if sample_average in ["x", "X"]:
-                        print("not sure where I'm going to here")
                         break
 
                     if regex.search(r"^\d+$", sample_average):
@@ -79,6 +80,10 @@ def new_season_menu():
                         print(f"moment of truth: {calculated_handicap}")
                         return_to_season_menu = True
                         provided_numerical_average = True
+                        # CONTINUE HERE: need to actually add all of this to sql
+                        # and need to figure out how to store the formula (json? can I store a list?)
+                        # and THEN I need to add the ability to modify seasons
+                        # good lord
 
             case _:
                 print("that's not a valid input, please try again")
