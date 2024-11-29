@@ -80,7 +80,6 @@ def get_all_leagues():
 
 def parse_formula(formula):
     print(f"this is the formula I need to parse: {formula}")
-    # word_char_regex = regex.compile(r"\b(\B+)\b")
 
     current_token = ""
     token_list = []
@@ -93,6 +92,10 @@ def parse_formula(formula):
             current_token += char
         else:
             if len(current_token) > 0:
+                # need to make sure the token isn't something like a0.90, which will get past the regexes above
+                if regex.search(r"\d", current_token) and regex.search(r"[a-zA-Z]", current_token):
+                    print(f"{current_token} is not a valid part of the formula, please try again")
+                    return False
                 token_list.append(current_token)
                 current_token = ""
             if char != " ":
@@ -101,11 +104,13 @@ def parse_formula(formula):
                 else:
                     print(f"{char} is not a valid token? please try again")
                     return False
+
     if len(current_token) > 0:
+        if regex.search(r"\d", current_token) and regex.search(r"[a-zA-Z]", current_token):
+            print(f"{current_token} is not a valid part of the formula, please try again")
+            return False
         token_list.append(current_token)
         current_token = ""
-
-    print(token_list)
 
     # make sure formula has the same number of open and closed parenthesis
     paren_balance = 0
@@ -142,6 +147,74 @@ def parse_formula(formula):
         print("no variable in the league formula? that seems unlikely - try again (unless I know what I'm doing, in which case I have to rewrite)")
         return False
 
-    print("still going")
-    dummy_average = 170
+    # TODO: figure out how to validate to make sure values always come in pairs
+    # e.g., (2 * average) and not (2 * average + 10)
+    # maybe not important since I'll be the one entering the formula, but it should still be done
+    return token_list
+
+    # dummy_average = 170
+    # calculated_value = recursive_calc_function(token_list, dummy_average)
+    # print(f"good lord, if that actually worked: {calculated_value}")
+
+
+def recursive_calc_function(token_list, bowler_average):
+    # print(f"at the top of function - list: {token_list}")
+
+    open_position = 0
+    closed_position = 0
+    paren_balance = 0
+    currently_in_parens = False
+    list_to_calculate = []
+    for token_position, each_token in enumerate(token_list):
+
+        # print(f"current token: {each_token}, am I currently in parens? {currently_in_parens}")
+        if each_token == "(" and not currently_in_parens:
+            open_position = token_position
+            paren_balance += 1
+            currently_in_parens = True
+        elif each_token == "(" and currently_in_parens:
+            paren_balance += 1
+        elif each_token == ")" and currently_in_parens:
+            paren_balance -= 1
+
+        if currently_in_parens and paren_balance == 0:
+            closed_position = token_position
+            sub_list = token_list[open_position + 1:closed_position]
+            currently_in_parens = False
+            # print(f"????? {sub_list}")
+            each_token = recursive_calc_function(sub_list, bowler_average)
+            # print(f"got back from recursive call - token: {each_token}, status of parens? {currently_in_parens}")
+
+        if not currently_in_parens:
+            # print(f"wtf - current token: {each_token}, type: {type(each_token)}")
+            # print(f"is the problem the list to calculate and the token list? {list_to_calculate}, {token_list}")
+
+            if type(each_token) == type(50):
+                list_to_calculate.append(each_token)
+            elif type(each_token) == type(5.5):
+                list_to_calculate.append(each_token)
+            elif regex.search(r"^\d+$", each_token):
+                list_to_calculate.append(int(each_token))
+            elif regex.search(r"^\d*\.\d+$", each_token):
+                list_to_calculate.append(float(each_token))
+            elif regex.search(r"^[a-zA-Z]+$", each_token):
+                list_to_calculate.append(bowler_average)
+            elif each_token in ["+", "-", "*", "/"]:
+                list_to_calculate.append(each_token)
+            else:
+                print("I shouldn't ever see this, something went wrong")
+
+        if len(list_to_calculate) == 3:
+            return_value = 0
+            if list_to_calculate[1] == "+":
+                return_value = list_to_calculate[0] + list_to_calculate[2]
+            elif list_to_calculate[1] == "-":
+                return_value = list_to_calculate[0] - list_to_calculate[2]
+            elif list_to_calculate[1] == "*":
+                return_value = list_to_calculate[0] * list_to_calculate[2]
+            elif list_to_calculate[1] == "/":
+                return_value = list_to_calculate[0] / list_to_calculate[2]
+
+            # print(f"about to return - list to calc: {list_to_calculate}, calculated value: {return_value}")
+            return return_value
 
