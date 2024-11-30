@@ -6,12 +6,15 @@ from data.bowler import Bowler
 from data.team import Team
 from data.alley import Alley
 from data.league import League
+from data.season import Season
 
 
 def parse_global_options(user_input):
     match user_input:
         case "b" | "B":
             all_bowlers = get_all_bowlers()
+            print("\n****************************")
+            print("all bowlers")
             print("****************************")
             for each_bowler in all_bowlers:
                 print(each_bowler)
@@ -19,6 +22,8 @@ def parse_global_options(user_input):
             return True
         case "t" | "T":
             all_teams = get_all_teams()
+            print("\n****************************")
+            print("all teams")
             print("****************************")
             for each_team in all_teams:
                 print(each_team)
@@ -26,6 +31,8 @@ def parse_global_options(user_input):
             return True
         case "a" | "A":
             all_alleys = get_all_alleys()
+            print("\n****************************")
+            print("all alleys")
             print("****************************")
             for each_alley in all_alleys:
                 print(each_alley)
@@ -33,9 +40,20 @@ def parse_global_options(user_input):
             return True
         case "l" | "L":
             all_leagues = get_all_leagues()
+            print("\n****************************")
+            print("all leagues")
             print("****************************")
             for each_league in all_leagues:
                 print(each_league)
+            print("****************************")
+            return True
+        case "s" | "S":
+            all_seasons = get_all_seasons()
+            print("\n****************************")
+            print("all seasons")
+            print("****************************")
+            for each_season in all_seasons:
+                print(each_season)
             print("****************************")
             return True
         case _:
@@ -74,6 +92,15 @@ def get_all_leagues():
     try:
         all_leagues = session.scalars(sa.select(League).order_by(League.id)).all()
         return all_leagues
+    finally:
+        session.close()
+
+
+def get_all_seasons():
+    session = db_session.create_session()
+    try:
+        all_seasons = session.scalars(sa.select(Season).order_by(Season.id)).all()
+        return all_seasons
     finally:
         session.close()
 

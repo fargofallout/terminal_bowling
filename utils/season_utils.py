@@ -1,5 +1,6 @@
 import regex
 import sqlalchemy as sa
+import json
 
 from data import db_session
 from data.season import Season
@@ -24,6 +25,8 @@ def season_menu():
                 return_to_main = True
             case "1":
                 new_season_menu()
+            case "2":
+                modify_season_menu()
             case _:
                 print("not a valid input, please try again")
 
@@ -80,13 +83,52 @@ def new_season_menu():
                         print(f"moment of truth: {calculated_handicap}")
                         return_to_season_menu = True
                         provided_numerical_average = True
-                        # CONTINUE HERE: need to actually add all of this to sql
-                        # and need to figure out how to store the formula (json? can I store a list?)
-                        # and THEN I need to add the ability to modify seasons
-                        # good lord
+                        new_season = create_season(season_timeframe, token_list, league_id)
+                        print(f"{new_season}")
 
             case _:
                 print("that's not a valid input, please try again")
+
+
+def modify_season_menu():
+    return_to_season_menu = False
+    while not return_to_season_menu:
+        print("\nenter 1 to modify a season's timeframe")
+        print("enter 2 to modify a season's handicap formula")
+        print("enter 3 to change a season's league")
+        print("enter 'x' to return to the main season menu")
+
+        season_input = input(":").strip()
+        if parse_global_options(season_input):
+            continue
+
+        match season_input:
+            case "1":
+                print("modifying a the years")
+            case "2":
+                print("modifying the formula")
+            case "3":
+                print("modifying the league")
+            case "x" | "X":
+                return_to_season_menu = True
+            case _:
+                print("not a valid input, please try again")
+
+
+def create_season(season_years, handicap_formula, league_id):
+    formula_as_json = json.dumps(handicap_formula)
+    print(f"this is the json version of the token list: {handicap_formula}")
+    new_season = Season(season_years=season_years, handicap_formula=formula_as_json, league_id=league_id)
+    session = db_session.create_session()
+
+    try:
+        session.add(new_season)
+        session.commit()
+        league_name = new_season.league.league_name
+        return new_season
+    finally:
+        session.close()
+
 
 
 class REqual(str):
