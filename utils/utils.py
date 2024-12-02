@@ -139,6 +139,10 @@ def parse_formula(formula):
         token_list.append(current_token)
         current_token = ""
 
+    # chop off leading and trailing parentheses
+    if token_list[0] == "(" and token_list[-1] == ")":
+        token_list = token_list[1:-1]
+
     # make sure formula has the same number of open and closed parenthesis
     paren_balance = 0
     for each_token in token_list:
@@ -163,7 +167,7 @@ def parse_formula(formula):
             variable_used = each_token
         elif word_match and variable_used:
             if each_token != variable_used:
-                print(f"at least two different variables were used: {variable_used} and {each_token}")
+                print(f"at least two different variables were used: '{variable_used}' and '{each_token}', which isn't allowed")
                 print("I'm really trying to not make this too complicated, just use one variable for average")
                 print("if two is actually necessary, I guess I'll deal with it")
                 return False
@@ -172,6 +176,11 @@ def parse_formula(formula):
     # no variable in the formula
     if not variable_used:
         print("no variable in the league formula? that seems unlikely - try again (unless I know what I'm doing, in which case I have to rewrite)")
+        return False
+
+    if len(token_list) < 3:
+        print("the length of the formula is less than three tokens, which doesn't seem legit - try again, or rewrite this when, in some")
+        print("weird alternate history, the handicap formula is something sqroot(average) or something")
         return False
 
     # TODO: figure out how to validate to make sure values always come in pairs
