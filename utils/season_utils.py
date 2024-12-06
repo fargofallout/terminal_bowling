@@ -93,7 +93,7 @@ def new_season_menu():
 def modify_season_menu():
     return_to_season_menu = False
     while not return_to_season_menu:
-        print("\nenter the season modification in this format: [league id] [modifcation choice] [(new value)]")
+        print("\nenter the season modification in this format: season_id [modifcation choice] [(new value)]")
         print("e.g., 1 2 ((215 - average) * 0.90)")
         print("or 2 1 (2024-2025)")
         print("modification choices are 1 for the season timefram, 2 for the handicap formula, and 3 for the season's league")
@@ -137,9 +137,22 @@ def modify_season_menu():
                 json_token_list = json.dumps(token_list)
                 updated_season = update_season(season_id, handicap_formula=json_token_list)
                 print(f"here is your new season: {updated_season}")
-            case r"^(\d+) +3 +\(\d+\)$":
-                # CONTINUE HERE: updating the season's league number
-                print("modifying the league")
+
+            case r"^(\d+) +3 +\((\d+)\)$":
+                new_season_match = regex.search(r"^(\d+) +3 +\((\d+)\)$", season_input)
+                season_id = new_season_match.group(1)
+                new_league_id = new_season_match.group(2)
+
+                new_league = get_league_by_id(new_league_id)
+                if not new_league:
+                    print("that league doesn't exist, please try again")
+                    continue
+                updated_season = update_season(season_id, league_id=new_league_id)
+                if not updated_season:
+                    print("like with leagues, I don't know how this could go wrong - I guess try again?")
+                    continue
+                actual_updated_season = get_season_by_id(season_id)
+                print(f"updated season: {actual_updated_season}")
             case "x" | "X":
                 return_to_season_menu = True
             case _:
@@ -182,6 +195,11 @@ def update_season(season_id, season_timeframe=None, handicap_formula=None, leagu
             return season
         elif handicap_formula:
             season.handicap_formula = handicap_formula
+            session.commit()
+            return season
+        elif league_id:
+            season.league_id = league_id
+            league_name = season.league.league_name
             session.commit()
             return season
     finally:

@@ -111,6 +111,9 @@ def modify_league_menu():
                 new_league = modify_league(league_id, new_alley_id=new_alley_id)
                 if not new_league:
                     print("dammit, not sure what could have went wrong with changing the league's alley")
+                    continue
+                actual_new_league = get_league_by_id(league_id)
+                print(f"updated league info: {actual_new_league}")
                 return_to_league_menu = True
 
             case _:
