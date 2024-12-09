@@ -156,8 +156,10 @@ def modify_league(league_id, new_name=None, new_alley_id=None):
 def get_league_by_id(league_id):
     session = db_session.create_session()
     try:
-        league = session.scalars(sa.select(League).where(League.id==league_id)).one_or_none()
+        league = session.scalars(sa.select(League).where(League.id==league_id)).unique().one_or_none()
         return league
+    except Exception as e:
+        print(f"can I catch whatever here? {e}")
     finally:
         session.close()
 

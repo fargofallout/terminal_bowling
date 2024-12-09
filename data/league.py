@@ -20,4 +20,5 @@ class League(SqlAlchemyBase):
 
     def __repr__(self):
         return f"{self.id}: {self.league_name}, alley: {self.alley}"
+        # return f"{self.id}: {self.league_name} - no alley right now, in case that's the problem"
 

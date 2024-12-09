@@ -59,7 +59,7 @@ def new_season_menu():
                 handicap_formula = season_match.group(3)
                 league = get_league_by_id(league_id)
                 if not league:
-                    print("not a valid league id, please try again")
+                    print(f"not a valid league id, please try again - here's the league id: {league_id}")
                     continue
 
                 # token_list will be something like ['(', '220', '-', 'avg', ')', '*', '0.90']
@@ -171,12 +171,21 @@ def delete_season_menu():
         if user_input in ["x", "X"]:
             return_to_season_menu = True
         elif input_match:
-            successful_deletion = delete_season(input_match.group(1))
-            if successful_deletion:
-                print("the season deletion was successful")
-                return_to_season_menu = True
-            else:
-                print("that id was not found, please try again")
+            season_id = input_match.group(1)
+            this_season = get_season_by_id(season_id)
+            league_id = this_season.league_id
+            league_name = this_season.league
+
+            print(f"does this work? id: {league_id}, name: {league_name}")
+            a_league = get_league_by_id(league_id)
+            print(f"getting the id on the league table: {a_league.id}")
+
+            # successful_deletion = delete_season(input_match.group(1))
+            # if successful_deletion:
+            #     print("the season deletion was successful")
+            #     return_to_season_menu = True
+            # else:
+            #     print("that id was not found, please try again")
         else:
             print("that is not a valid input, please try again")
 

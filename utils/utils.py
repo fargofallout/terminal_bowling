@@ -81,7 +81,8 @@ def get_all_teams():
 def get_all_alleys():
     session = db_session.create_session()
     try:
-        all_alleys = session.scalars(sa.select(Alley).order_by(Alley.id)).all()
+        # all_alleys = session.scalars(sa.select(Alley).order_by(Alley.id)).all()
+        all_alleys = session.scalars(sa.select(Alley).order_by(Alley.id)).unique().all()
         return all_alleys
     finally:
         session.close()
@@ -90,7 +91,7 @@ def get_all_alleys():
 def get_all_leagues():
     session = db_session.create_session()
     try:
-        all_leagues = session.scalars(sa.select(League).order_by(League.id)).all()
+        all_leagues = session.scalars(sa.select(League).order_by(League.id)).unique().all()
         return all_leagues
     finally:
         session.close()
