@@ -27,6 +27,8 @@ def season_menu():
                 new_season_menu()
             case "2":
                 modify_season_menu()
+            case "3":
+                delete_season_menu()
             case _:
                 print("not a valid input, please try again")
 
@@ -159,6 +161,24 @@ def modify_season_menu():
                 print("not a valid input, please try again")
 
 
+def delete_season_menu():
+    return_to_season_menu = False
+
+    while not return_to_season_menu:
+        print("\nplease enter the id of the season to delete")
+        user_input = input(":").strip()
+        input_match = regex.search(r"^(\d+)$", user_input)
+        if user_input in ["x", "X"]:
+            return_to_season_menu = True
+        elif input_match:
+            successful_deletion = delete_season(input_match.group(1))
+            if successful_deletion:
+                print("the season deletion was successful")
+                return_to_season_menu = True
+            else:
+                print("that id was not found, please try again")
+        else:
+            print("that is not a valid input, please try again")
 
 def create_season(season_years, handicap_formula, league_id):
     # TODO: should I do this here, or should I do it before calling the function? I should probably do it before calling it, right? 
@@ -204,6 +224,21 @@ def update_season(season_id, season_timeframe=None, handicap_formula=None, leagu
             return season
     finally:
         session.close()
+
+
+def delete_season(season_id):
+    session = db_session.create_session()
+    try:
+        season = session.scalars(sa.select(Season).where(Season.id==season_id)).one_or_none()
+        if season:
+            session.delete(season)
+            session.commit()
+            return True
+        else:
+            return False
+    finally:
+        session.close()
+
 
 class REqual(str):
     def __eq__(self, pattern):
