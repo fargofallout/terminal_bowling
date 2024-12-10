@@ -36,13 +36,15 @@ def season_menu():
 def new_season_menu():
     return_to_season_menu = False
     while not return_to_season_menu:
-        print("\n***********************************************")
-        print("note: a season has to be attached to a league")
-        print("enter these three parts of a season: [league id] [season timeframe] [handicap formula]")
-        print("in this format: 1 [2024-2025] ((220 - average) * 0.9)")
-        print("more notes: put the season timeframe in square brackets and the formula in parentheses")
+        print("\nnote: a season has to be attached to a league")
+        print("enter a season in this format:")
+        print("***********************************************")
+        print("league_id [season_timeframe] (handicap_formula)")
+        print("e.g., 1 [2024-2025] ((220 - average) * 0.9)")
+        print("***********************************************")
         print("for the formula, make sure to wrap each pair of values in parentheses")
-        print("I'm omly accepting one unique variable, but if I ever encounter something else in a league, I'll deal with it")
+        print("such as (230 - (average * .8))     rather than      (230 - average * .8)")
+        print("only one unique variable is allowed - if it ever becomes necessary to expand that, I'll figure it out")
 
         user_input = input(":").strip()
         if parse_global_options(user_input):
@@ -167,6 +169,9 @@ def delete_season_menu():
     while not return_to_season_menu:
         print("\nplease enter the id of the season to delete")
         user_input = input(":").strip()
+        if parse_global_options(user_input):
+            continue
+
         input_match = regex.search(r"^(\d+)$", user_input)
         if user_input in ["x", "X"]:
             return_to_season_menu = True
@@ -176,16 +181,15 @@ def delete_season_menu():
             league_id = this_season.league_id
             league_name = this_season.league
 
-            print(f"does this work? id: {league_id}, name: {league_name}")
             a_league = get_league_by_id(league_id)
-            print(f"getting the id on the league table: {a_league.id}")
 
-            # successful_deletion = delete_season(input_match.group(1))
-            # if successful_deletion:
-            #     print("the season deletion was successful")
-            #     return_to_season_menu = True
-            # else:
-            #     print("that id was not found, please try again")
+            successful_deletion = delete_season(input_match.group(1))
+            if successful_deletion:
+                print("the season deletion was successful")
+                return_to_season_menu = True
+            else:
+                print("that id was not found, please try again")
+
         else:
             print("that is not a valid input, please try again")
 
@@ -208,7 +212,7 @@ def create_season(season_years, handicap_formula, league_id):
 def get_season_by_id(season_id):
     session = db_session.create_session()
     try:
-        season = session.scalars(sa.select(Season).where(Season.id==season_id)).one_or_none()
+        season = session.scalars(sa.select(Season).where(Season.id==season_id)).unique().one_or_none()
         return season
     finally:
         session.close()
@@ -217,7 +221,7 @@ def get_season_by_id(season_id):
 def update_season(season_id, season_timeframe=None, handicap_formula=None, league_id=None):
     session = db_session.create_session()
     try:
-        season = session.scalars(sa.select(Season).where(Season.id==season_id)).one_or_none()
+        season = session.scalars(sa.select(Season).where(Season.id==season_id)).unique().one_or_none()
         if season_timeframe:
             season.season_years = season_timeframe
             session.commit()
@@ -238,7 +242,7 @@ def update_season(season_id, season_timeframe=None, handicap_formula=None, leagu
 def delete_season(season_id):
     session = db_session.create_session()
     try:
-        season = session.scalars(sa.select(Season).where(Season.id==season_id)).one_or_none()
+        season = session.scalars(sa.select(Season).where(Season.id==season_id)).unique().one_or_none()
         if season:
             session.delete(season)
             session.commit()

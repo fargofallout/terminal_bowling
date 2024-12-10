@@ -100,7 +100,7 @@ def get_all_leagues():
 def get_all_seasons():
     session = db_session.create_session()
     try:
-        all_seasons = session.scalars(sa.select(Season).order_by(Season.id)).all()
+        all_seasons = session.scalars(sa.select(Season).order_by(Season.id)).unique().all()
         return all_seasons
     finally:
         session.close()

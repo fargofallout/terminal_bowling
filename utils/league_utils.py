@@ -57,7 +57,7 @@ def create_league_menu():
                     print("alley id does not exist, please try again")
                     continue
                 new_league = create_league(league_name, alley_id)
-                print(f"new league: {new_league}, alley: {new_league.alley}")
+                print(f"new league: {new_league}")
                 return_to_league_menu = True
             case _:
                 print("not a valid input, please try again")
@@ -136,7 +136,7 @@ def create_league(league_name, alley_id):
 def modify_league(league_id, new_name=None, new_alley_id=None):
     session = db_session.create_session()
     try:
-        league = session.scalars(sa.select(League).where(League.id==league_id)).one_or_none()
+        league = session.scalars(sa.select(League).where(League.id==league_id)).unique().one_or_none()
         if not league:
             print("not sure why I'd ever hit this since I check it in the menu function")
             return ""
