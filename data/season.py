@@ -12,6 +12,8 @@ class Season(SqlAlchemyBase):
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     season_years: str = sa.Column(sa.String, index=True)
     handicap_formula: Mapped[str] = mapped_column(sa.String)
+    games_per_week: Mapped[int]
+    players_per_team: Mapped[int]
 
     league_id: str = sa.Column(sa.String, sa.ForeignKey("league_table.id"))
     league: Mapped["League"] = relationship(back_populates="season", lazy="joined")

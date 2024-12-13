@@ -55,7 +55,7 @@ def new_season_menu():
                 return_to_season_menu = True
             # user input is in this format: 1 [timeframe] (formula)
             case r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\))$":
-                season_match = regex.search("^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\))$", user_input)
+                season_match = regex.search(r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\))$", user_input)
                 league_id = season_match.group(1)
                 season_timeframe = season_match.group(2)
                 handicap_formula = season_match.group(3)
@@ -178,10 +178,6 @@ def delete_season_menu():
         elif input_match:
             season_id = input_match.group(1)
             this_season = get_season_by_id(season_id)
-            league_id = this_season.league_id
-            league_name = this_season.league
-
-            a_league = get_league_by_id(league_id)
 
             successful_deletion = delete_season(input_match.group(1))
             if successful_deletion:

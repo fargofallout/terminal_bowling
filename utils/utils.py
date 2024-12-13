@@ -56,6 +56,8 @@ def parse_global_options(user_input):
                 print(each_season)
             print("****************************")
             return True
+        case "h" | "H":
+            print("this is where I'd print the help, if there were to be any")
         case _:
             return False
 
