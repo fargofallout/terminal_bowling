@@ -19,5 +19,9 @@ class Season(SqlAlchemyBase):
     league: Mapped["League"] = relationship(back_populates="season", lazy="joined")
 
     def __repr__(self):
-        return f"{self.id}, season: {self.season_years}, handicap formula: {self.handicap_formula}, league name: {self.league.league_name}"
+        return f"{self.id}, season: {self.season_years}, "\
+        f"handicap formula: {self.handicap_formula}, "\
+        f"games per week: {self.games_per_week}, "\
+        f"players per team: {self.players_per_team}, "\
+        f"league name: {self.league.league_name}"
 

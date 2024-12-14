@@ -39,8 +39,8 @@ def new_season_menu():
         print("\nnote: a season has to be attached to a league")
         print("enter a season in this format:")
         print("***********************************************")
-        print("league_id [season_timeframe] (handicap_formula)")
-        print("e.g., 1 [2024-2025] ((220 - average) * 0.9)")
+        print("league_id [season_timeframe] (handicap_formula) games_per_week players_per_team")
+        print("e.g., 1 [2024-2025] ((220 - average) * 0.9) 3 5")
         print("***********************************************")
         print("for the formula, make sure to wrap each pair of values in parentheses")
         print("such as (230 - (average * .8))     rather than      (230 - average * .8)")
@@ -54,11 +54,13 @@ def new_season_menu():
             case "x" | "X":
                 return_to_season_menu = True
             # user input is in this format: 1 [timeframe] (formula)
-            case r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\))$":
-                season_match = regex.search(r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\))$", user_input)
+            case r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\)) +(\d+) +(\d+)$":
+                season_match = regex.search(r"^(\d+) +\[([^\n\[\]]+)\] +(\([^\n]+\)) +(\d+) +(\d+)$", user_input)
                 league_id = season_match.group(1)
                 season_timeframe = season_match.group(2)
                 handicap_formula = season_match.group(3)
+                games_per_week = season_match.group(4)
+                players_per_team = season_match.group(5)
                 league = get_league_by_id(league_id)
                 if not league:
                     print(f"not a valid league id, please try again - here's the league id: {league_id}")
@@ -87,7 +89,7 @@ def new_season_menu():
                         print(f"moment of truth: {calculated_handicap}")
                         return_to_season_menu = True
                         provided_numerical_average = True
-                        new_season = create_season(season_timeframe, token_list, league_id)
+                        new_season = create_season(season_timeframe, token_list, league_id, games_per_week, players_per_team)
                         print(f"{new_season}")
 
             case _:
@@ -97,10 +99,16 @@ def new_season_menu():
 def modify_season_menu():
     return_to_season_menu = False
     while not return_to_season_menu:
-        print("\nenter the season modification in this format: season_id [modifcation choice] [(new value)]")
+        print("\n********************************")
+        print("enter the season modification in this format: season_id modifcation_choice (new_value)")
         print("e.g., 1 2 ((215 - average) * 0.90)")
         print("or 2 1 (2024-2025)")
-        print("modification choices are 1 for the season timefram, 2 for the handicap formula, and 3 for the season's league")
+        print("********************************")
+        print("1 for season timeframe")
+        print("2 for handicap formula")
+        print("3 for the season's related league")
+        print("4 for number of games per week")
+        print("5 for number of bowlers per team")
 
         season_input = input(":").strip()
         if parse_global_options(season_input):
@@ -120,6 +128,7 @@ def modify_season_menu():
                 new_timeframe = season_timeframe_match.group(2)
                 updated_season = update_season(season_id, season_timeframe=new_timeframe)
                 print(f"updated season: {updated_season}")
+                return_to_season_menu = True
 
             case r"^(\d+) +2 +(\([^\n]+\))$":
                 season_formula_match = regex.search(r"^(\d+) +2 +(\([^\n]+\))$", season_input)
@@ -141,6 +150,7 @@ def modify_season_menu():
                 json_token_list = json.dumps(token_list)
                 updated_season = update_season(season_id, handicap_formula=json_token_list)
                 print(f"here is your new season: {updated_season}")
+                return_to_season_menu = True
 
             case r"^(\d+) +3 +\((\d+)\)$":
                 new_season_match = regex.search(r"^(\d+) +3 +\((\d+)\)$", season_input)
@@ -157,6 +167,30 @@ def modify_season_menu():
                     continue
                 actual_updated_season = get_season_by_id(season_id)
                 print(f"updated season: {actual_updated_season}")
+                return_to_season_menu = True
+
+            case r"^(\d+) +4 +\((\d+)\)$":
+                mod_season_match = regex.search(r"^(\d+) +4 +\((\d+)\)$", season_input)
+                games_per_week = int(mod_season_match.group(2))
+                updated_season = update_season(season_id, games_per_week=games_per_week)
+                if not updated_season:
+                    print("not sure what went wrong here")
+                    continue
+                actual_updated_season = get_season_by_id(season_id)
+                print(f"updated season: {actual_updated_season}")
+                return_to_season_menu = True
+
+            case r"^(\d+) +5 +\((\d+)\)$":
+                mod_season_match = regex.search(r"^(\d+) +5 +\((\d+)\)$", season_input)
+                players_per_team = int(mod_season_match.group(2))
+                updated_season = update_season(season_id, players_per_team=players_per_team)
+                if not updated_season:
+                    print("season wasn't updtaed and I don't know why")
+                    continue
+                actual_updated_season = get_season_by_id(season_id)
+                print(f"updated season: {actual_updated_season}")
+                return_to_season_menu = True
+
             case "x" | "X":
                 return_to_season_menu = True
             case _:
@@ -189,11 +223,11 @@ def delete_season_menu():
         else:
             print("that is not a valid input, please try again")
 
-def create_season(season_years, handicap_formula, league_id):
+def create_season(season_years, handicap_formula, league_id, games_per_week, players_per_team):
     # TODO: should I do this here, or should I do it before calling the function? I should probably do it before calling it, right? 
     formula_as_json = json.dumps(handicap_formula)
     print(f"this is the json version of the token list: {handicap_formula}")
-    new_season = Season(season_years=season_years, handicap_formula=formula_as_json, league_id=league_id)
+    new_season = Season(season_years=season_years, handicap_formula=formula_as_json, league_id=league_id, games_per_week=games_per_week, players_per_team=players_per_team)
     session = db_session.create_session()
 
     try:
@@ -214,7 +248,7 @@ def get_season_by_id(season_id):
         session.close()
 
 
-def update_season(season_id, season_timeframe=None, handicap_formula=None, league_id=None):
+def update_season(season_id, season_timeframe=None, handicap_formula=None, league_id=None, games_per_week=None, players_per_team=None):
     session = db_session.create_session()
     try:
         season = session.scalars(sa.select(Season).where(Season.id==season_id)).unique().one_or_none()
@@ -229,6 +263,14 @@ def update_season(season_id, season_timeframe=None, handicap_formula=None, leagu
         elif league_id:
             season.league_id = league_id
             league_name = season.league.league_name
+            session.commit()
+            return season
+        elif games_per_week:
+            season.games_per_week = games_per_week
+            session.commit()
+            return season
+        elif players_per_team:
+            season.players_per_team = players_per_team
             session.commit()
             return season
     finally:
