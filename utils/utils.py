@@ -65,7 +65,7 @@ def parse_global_options(user_input):
 def get_all_bowlers():
     session = db_session.create_session()
     try:
-        result = session.scalars(sa.select(Bowler).order_by(Bowler.id)).all()
+        result = session.scalars(sa.select(Bowler).order_by(Bowler.id)).unique().all()
         return result
     finally:
         session.close()

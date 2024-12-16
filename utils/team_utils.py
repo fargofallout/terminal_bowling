@@ -30,7 +30,7 @@ def team_menu():
                 modify_team_menu()
             case "3":
                 delete_team_menu()
-            case "x":
+            case "x" | "X":
                 return_to_main = True
             case _:
                 print("not a valid choice, please try again")

@@ -2,7 +2,7 @@ import sqlalchemy as sa
 from pathlib import Path
 
 import data.db_session as db_session
-from utils import bowler_utils, team_utils, alley_utils, league_utils, season_utils
+from utils import bowler_utils, team_utils, alley_utils, league_utils, season_utils, game_utils
 from utils.utils import parse_global_options
 
 
@@ -32,6 +32,7 @@ def main():
         print("4 for league menu")
         print("5 for alley menu")
         print("6 for season menu")
+        print("7 for game menu (probably only for my games outside of a head-to-head?)")
         print(f"x to exit")
 
         user_choice = input(":").strip()
@@ -53,6 +54,8 @@ def main():
                 alley_utils.alley_menu()
             case "6":
                 season_utils.season_menu()
+            case "7":
+                game_utils.game_menu()
             case "x" | "X":
                 exit_prog = True
             case _:
