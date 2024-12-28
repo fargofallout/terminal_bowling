@@ -11,9 +11,9 @@ def team_menu():
     return_to_main = False
 
     while not return_to_main:
-        print(f"\n1 to add a new team") #done
-        print(f"2 to modify a team") #done
-        print(f"3 to delete a team") #done
+        print(f"\n1 to add a new team")
+        print(f"2 to modify a team")
+        print(f"3 to delete a team")
         print(f"x to exit")
 
         user_choice = input(":").strip()
