@@ -7,6 +7,7 @@ from data.team import Team
 from data.alley import Alley
 from data.league import League
 from data.season import Season
+from data.game import Game
 
 
 def parse_global_options(user_input):
@@ -54,6 +55,15 @@ def parse_global_options(user_input):
             print("****************************")
             for each_season in all_seasons:
                 print(each_season)
+            print("****************************")
+            return True
+        case "g" | "G":
+            all_games = get_all_games()
+            print("\n****************************")
+            print("all games")
+            print("****************************")
+            for each_game in all_games:
+                print(each_game)
             print("****************************")
             return True
         case "h" | "H":
@@ -107,6 +117,14 @@ def get_all_seasons():
     finally:
         session.close()
 
+
+def get_all_games():
+    session = db_session.create_session()
+    try:
+        all_games = session.scalars(sa.select(Game).order_by(Game.id)).unique().all()
+        return all_games
+    finally:
+        session.close()
 
 def parse_formula(formula):
     print(f"this is the formula I need to parse: {formula}")

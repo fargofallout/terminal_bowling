@@ -119,6 +119,7 @@ def delete_bowler_menu():
             case _:
                 print("invalid choice, please try again")
 
+
 def create_bowler(first_name, last_name):
     new_bolwer = Bowler(first_name=first_name, last_name=last_name)
     session = db_session.create_session()
@@ -149,7 +150,7 @@ def delete_bowler(id):
 def get_bowler_by_id(id):
     session = db_session.create_session()
     try:
-        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).one_or_none()
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).unique().one_or_none()
         # print(f"here's that bowler: {bowler}")
         # print(f"id? {bowler.id}")
         return bowler

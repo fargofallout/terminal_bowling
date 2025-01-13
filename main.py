@@ -12,6 +12,7 @@ def configure_db():
     db_session.global_init(file.as_posix())
     # print(f"what if it's file as posix? {file.as_posix()}, {type(file.as_posix())}")
 
+
 def main():
     configure_db()
 

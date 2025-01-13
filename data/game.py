@@ -15,3 +15,6 @@ class Game(SqlAlchemyBase):
     bowler_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("bowler_table.id"))
     bowler: orm.Mapped["Bowler"] = orm.relationship(back_populates="game", lazy="joined")
 
+    def __repr__(self):
+        return f"bowler: {self.bowler_id}, score: {self.score}, handicap: {self.handicap}, game number: {self.game_number}"
+

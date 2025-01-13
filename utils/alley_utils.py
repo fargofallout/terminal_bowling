@@ -37,7 +37,7 @@ def alley_menu():
                 else:
                     print("not even sure how I managed, but that alley name doesn't work - try again")
             case "2":
-                modbfy_alley_menu()
+                modify_alley_menu()
             case "x" | "X":
                 return_to_main = True
             case _:
@@ -51,7 +51,7 @@ def modify_alley_menu():
         print("enter 'x' to return to main alley menu")
 
         user_input = input(":").strip()
-        if parse_global_options(user_choice):
+        if parse_global_options(user_input):
             continue
 
         match REqual(user_input):
