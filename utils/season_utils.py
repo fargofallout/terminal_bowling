@@ -212,13 +212,16 @@ def delete_season_menu():
         elif input_match:
             season_id = input_match.group(1)
             this_season = get_season_by_id(season_id)
+            if not this_season:
+                print("that id doesn't exist, please try again")
+                continue
 
             successful_deletion = delete_season(input_match.group(1))
             if successful_deletion:
                 print("the season deletion was successful")
                 return_to_season_menu = True
             else:
-                print("that id was not found, please try again")
+                print("something went wrong with the deletion, please try again")
 
         else:
             print("that is not a valid input, please try again")

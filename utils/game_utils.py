@@ -25,6 +25,8 @@ def game_menu():
                 add_game_menu()
             case "2":
                 modify_game_menu()
+            case "3":
+                delete_game_menu()
             case "x" | "X":
                 return_to_main = True
             case _:
@@ -98,16 +100,48 @@ def modify_game_menu():
                 updated_game = modify_game(game_id, bowler_id=bowler_id, score=score, handicap=handicap, game_number=game_number)
                 if updated_game:
                     print(f"here is the your updated game: {updated_game}")
-                    # CONTINUE HERE:
+                    # TODO:
                     # apparently sqlite doesn't care about types and I need to make sure I'm using the correct
                     # type when I insert them - I need to go through and update some types in my creation/updating functions
                 else:
                     print("something went wrong, try again")
+
             case "x" | "X":
                 return_to_game_menu = True
 
             case _:
                 print("not a valid input, please try again")
+
+
+def delete_game_menu():
+    return_to_game_menu = False
+
+    while not return_to_game_menu:
+        print("\nenter the game id to delete")
+        user_input = input(":").strip()
+        if parse_global_options(user_input):
+            continue
+
+        input_match = regex.search(r"^(\d+)$", user_input)
+        if user_input in ["x", "X"]:
+            return_to_game_menu = True
+
+        elif input_match:
+            game_id = input_match.group(1)
+            game_to_delete = get_game_by_id(game_id)
+            if not game_to_delete:
+                print("that game doesn't exist, please try again")
+                continue
+
+            game_deleted = delete_game(game_id)
+            if not game_deleted:
+                print("something went wrong with the deletion, please try again")
+            else:
+                print("game has been successfully deleted")
+                return_to_game_menu = True
+
+        else:
+            print("not a valid input, please try again")
 
 
 def create_game(score, handicap, game_number, bowler_id):
@@ -134,12 +168,38 @@ def modify_game(game_id, bowler_id=None, score=None, handicap=None, game_number=
                 game.bowler_id = int(bowler_id)
             if score != "_" and score.isdigit():
                 game.score = int(score)
+            if handicap != "_" and handicap.isdigit():
+                game.handicap = handicap
+            if game_number != "" and game_number.isdigit():
+                game.game_number = game_number
             session.commit()
             return game
 
     finally:
         session.close()
 
+
+def delete_game(game_id):
+    session = db_session.create_session()
+    try:
+        game = session.scalars(sa.select(Game).where(Game.id == game_id)).unique().one_or_none()
+        if game:
+            session.delete(game)
+            session.commit()
+            return True
+        else:
+            False
+    finally:
+        session.close()
+
+
+def get_game_by_id(game_id):
+    session = db_session.create_session()
+    try:
+        game = session.scalars(sa.select(Game).where(Game.id == game_id)).unique().one_or_none()
+        return game
+    finally:
+        session.close()
 
 
 class REqual(str):
