@@ -4,6 +4,7 @@ from pathlib import Path
 import data.db_session as db_session
 from utils import bowler_utils, team_utils, alley_utils, league_utils, season_utils, game_utils
 from utils.utils import parse_global_options
+from new_week import new_week_menu
 
 
 def configure_db():
@@ -18,8 +19,8 @@ def main():
 
     print("\n********************")
     print("in almost all menus, enter b to list all bowlers, t to list all teams,")
-    print("l to list all leagues, a to list all alleys, and s to list all seasons")
-    print("and h for help?")
+    print("l to list all leagues, a to list all alleys, s to list all seasons,")
+    print("g to list all games, and h for help?")
     print("********************")
 
     exit_prog = False
@@ -44,7 +45,7 @@ def main():
 
         match user_choice:
             case "1":
-                print("doing 1 stuff")
+                new_week_menu()
             case "2":
                 bowler_utils.bowler_menu()
             case "3":
