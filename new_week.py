@@ -1,6 +1,7 @@
 import regex
 
 from utils.season_utils import get_season_by_id
+from utils.team_utils import get_team_by_id
 from utils.utils import parse_global_options
 
 
@@ -37,34 +38,87 @@ def new_week_menu():
             print("that is not a valid season id, please try again")
             continue
 
-        print("\nthis is where I'd present what the next week in that league is")
-        print("but I haven't implemented that yet and won't until I have a full week in the db?")
+        new_week = get_week()
+        if not new_week:
+            continue
+        print(f"got {new_week} for the week")
 
-        print("\nto accept that week, simply hit enter at this prompt")
-        print("otherwise, if it should be a different week for some reason, enter it here")
+        teams = get_teams()
 
-        user_input = input(":").strip()
-        week_match = regex.search(r"^(\d+)$", user_input)
-        if not user_input:
+
+def get_week():
+    return_to_main = False
+
+    while not return_to_main:
+        print("\nthis is where I'd show you what the next week in this league is")
+        print("but I can't really implement that until I have a week in the db,")
+        print("so you can't actually hit enter at the next prompt and accomplish anything - just enter a nmber for a new week")
+
+        print("\nto accept that week, just press 'enter'")
+        print("otherwise, enter the week number here to input data for a specific week")
+
+        week_input = input(":").strip()
+        if parse_global_options(week_input):
+            continue
+
+        if week_input in ["x", "X"]:
+            return_to_main = True
+            return ""
+
+        week_match = regex.search(r"^(\d+)$", week_input)
+        if not week_input:
             print("I told you, this isn't implemented yet")
             continue
 
         elif week_match:
             new_week = int(week_match.group(1))
-            print(f"new week will be week {new_week}")
+            # TODO: see below
             print("also, I need to make sure that week doesn't overlap with an existing week")
             print("ugh")
 
+            return new_week
+
         else:
-            print("that's not a valid input")
+            print("not a valid input, please try again")
             continue
 
-        print("\nnext, enter the two team ids with a space in between them")
+
+def get_teams():
+    return_to_main = False
+    while not return_to_main:
+        print("\nnext, enter the left team id and the right team id with a space in between")
         print("e.g., (I know this is obvious) 1 2")
 
         user_input = input(":").strip()
-        # CONTINUE HERE
-        print("should these all be separate menus like in the other utils files")
-        print("so if there's a mistake in one, you don't have to do the whole thing over?")
+        if parse_global_options(user_input):
+            continue
 
+        if user_input in ["x", "X"]:
+            return_to_main = True
+            return
+
+        teams_match = regex.search(r"^(\d+) +(\d+)$", user_input)
+        if not teams_match:
+            print("that is not a valid input, please try again")
+            continue
+
+        team_one_id = int(teams_match.group(1))
+        team_one = get_team_by_id(team_one_id)
+        team_two_id = int(teams_match.group(2))
+        team_two = get_team_by_id(team_two_id)
+
+        if not team_one and not team_two:
+            print("neither team id is valid, please try again")
+            continue
+        elif not team_one:
+            print("team one is not valid, please try again")
+            continue
+        elif not team_two:
+            print("team two is not valid, please try agian")
+            continue
+        elif team_one_id == team_two_id:
+            print("you can't have the same team on both sides, please try again")
+            continue
+
+        print("I guess they're valid?")
 

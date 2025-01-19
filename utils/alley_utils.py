@@ -121,7 +121,7 @@ def add_alley(alley_name, city_name=None):
 def modify_alley(alley_id, new_name=None, new_city=None):
     session = db_session.create_session()
     try:
-        alley = session.scalars(sa.select(Alley).where(Alley.id==alley_id)).one_or_none()
+        alley = session.scalars(sa.select(Alley).where(Alley.id == alley_id)).unique().one_or_none()
         if not alley:
             return ""
         else:

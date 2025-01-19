@@ -68,10 +68,10 @@ def modify_league_menu():
     while not return_to_league_menu:
         # TODO: I don't like how this looks in the terminal
         print("\n*************************************************")
-        print("to modify a league, use the format 'ml [league id] [new leauge name]', e.g.,")
+        print("to modify a league, use the format 'ml league_id new_leauge_name', e.g.,")
         print("ml 5 new league name")
         print("*************************************************")
-        print("to modify the alley associated with a league, use the format 'ma [league id] [new alley id]', e.g.,")
+        print("to modify the alley associated with a league, use the format 'ma league_id new_alley_id', e.g.,")
         print("ma 5 10")
         print("*************************************************")
 

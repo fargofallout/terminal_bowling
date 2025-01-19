@@ -136,7 +136,7 @@ def delete_bowler(id):
     session = db_session.create_session()
 
     try:
-        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).one_or_none()
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id==id)).unique().one_or_none()
         if bowler:
             session.delete(bowler)
             session.commit()
@@ -163,7 +163,7 @@ def modify_bowler(bowler_id, new_first_name, new_last_name):
 
     try:
         # session.execute(sa.update(Bowler),[{"id":bowler_id, "first_name": new_first_name, "last_name": new_last_name},],)
-        bowler = session.scalars(sa.select(Bowler).where(Bowler.id == bowler_id)).one_or_none()
+        bowler = session.scalars(sa.select(Bowler).where(Bowler.id == bowler_id)).unique().one_or_none()
         if not bowler:
             return ""
         else:

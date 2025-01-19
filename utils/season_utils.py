@@ -36,7 +36,8 @@ def season_menu():
 def new_season_menu():
     return_to_season_menu = False
     while not return_to_season_menu:
-        print("\nnote: a season has to be attached to a league")
+        print("\n***********************************************")
+        print("note: a season has to be attached to a league")
         print("enter a season in this format:")
         print("***********************************************")
         print("league_id [season_timeframe] (handicap_formula) games_per_week players_per_team")
@@ -123,8 +124,8 @@ def modify_season_menu():
                 continue
 
         match REqual(season_input):
-            case r"^(\d+) +1 +(\([^\n]+\))$":
-                season_timeframe_match = regex.search(r"^(\d+) +1 +(\([^\n]+\))$", season_input)
+            case r"^(\d+) +1 +\(([^\n]+)\)$":
+                season_timeframe_match = regex.search(r"^(\d+) +1 +\(([^\n]+)\)$", season_input)
                 new_timeframe = season_timeframe_match.group(2)
                 updated_season = update_season(season_id, season_timeframe=new_timeframe)
                 print(f"updated season: {updated_season}")
