@@ -44,6 +44,15 @@ def new_week_menu():
         print(f"got {new_week} for the week")
 
         teams = get_teams()
+        if not teams:
+            continue
+        print(f"this is team 1: {teams[0]}")
+        print(f"this is team 2: {teams[1]}")
+
+        # CONTINUE HERE: need to provide a list of bowler next and get an input for all of them
+        # this is where things get complicated - I should have bowler associated with a team in some way,
+        # but I think that should be based on them having bowled with a team and not actually have there be a 
+        # foreign key relationship between bowler/team
 
 
 def get_week():
@@ -86,14 +95,14 @@ def get_week():
 def get_teams():
     return_to_main = False
     while not return_to_main:
-        print("\nnext, enter the left team id and the right team id with a space in between")
+        print("\nnext, enter the team ids in the format left_team_id right_team_id")
         print("e.g., (I know this is obvious) 1 2")
 
         user_input = input(":").strip()
         if parse_global_options(user_input):
             continue
 
-        if user_input in ["x", "X"]:
+        if user_input in ["x", "X"] or not user_input:
             return_to_main = True
             return
 
@@ -121,4 +130,5 @@ def get_teams():
             continue
 
         print("I guess they're valid?")
+        return team_one, team_two
 
