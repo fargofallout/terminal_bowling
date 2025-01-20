@@ -2,12 +2,12 @@ import sqlalchemy as sa
 import regex
 
 from data import db_session
-from data.league import League
-from data.season import Season
 from data.game import Game
 from utils.team_utils import get_all_teams
 from utils.bowler_utils import get_all_bowlers
 from utils.alley_utils import get_all_alleys
+from utils.league_utils import get_all_leagues
+from utils.season_utils import get_all_seasons
 
 
 class REqual(str):
@@ -75,24 +75,6 @@ def parse_global_options(user_input):
             print("this is where I'd print the help, if there were to be any")
         case _:
             return False
-
-
-def get_all_leagues():
-    session = db_session.create_session()
-    try:
-        all_leagues = session.scalars(sa.select(League).order_by(League.id)).unique().all()
-        return all_leagues
-    finally:
-        session.close()
-
-
-def get_all_seasons():
-    session = db_session.create_session()
-    try:
-        all_seasons = session.scalars(sa.select(Season).order_by(Season.id)).unique().all()
-        return all_seasons
-    finally:
-        session.close()
 
 
 def get_all_games():

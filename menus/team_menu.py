@@ -78,6 +78,7 @@ def get_new_team_name_menu(team_to_modify):
 
 
 def delete_team_menu():
+    # TODO: should I show the item to be deleted and prompt for confirmation before doing so?
     return_to_team_menu = False
     while not return_to_team_menu:
         print("\nenter the team's id to delete them")
@@ -88,7 +89,7 @@ def delete_team_menu():
             continue
 
         match REqual(user_choice):
-            case r"\d+":
+            case r"^\d+$":
                 successful_deletion = delete_team(user_choice)
                 if successful_deletion:
                     print("team has been deleted")

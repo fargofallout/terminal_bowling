@@ -2,10 +2,10 @@
 from pathlib import Path
 
 import data.db_session as db_session
-from utils import league_utils, season_utils, game_utils
+from utils import game_utils
 from utils.utils import parse_global_options
 from new_week import new_week_menu
-from menus import team_menu, bowler_menu, alley_menu
+from menus import team_menu, bowler_menu, alley_menu, league_menu, season_menu
 
 
 def configure_db():
@@ -52,11 +52,11 @@ def main():
             case "3":
                 team_menu.team_menu()
             case "4":
-                league_utils.league_menu()
+                league_menu.league_menu()
             case "5":
                 alley_menu.alley_menu()
             case "6":
-                season_utils.season_menu()
+                season_menu.season_menu()
             case "7":
                 game_utils.game_menu()
             case "x" | "X":
