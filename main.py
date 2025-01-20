@@ -1,11 +1,11 @@
-import sqlalchemy as sa
+# import sqlalchemy as sa
 from pathlib import Path
 
 import data.db_session as db_session
-from utils import bowler_utils, alley_utils, league_utils, season_utils, game_utils
+from utils import league_utils, season_utils, game_utils
 from utils.utils import parse_global_options
 from new_week import new_week_menu
-from menus import team_menu
+from menus import team_menu, bowler_menu, alley_menu
 
 
 def configure_db():
@@ -48,13 +48,13 @@ def main():
             case "1":
                 new_week_menu()
             case "2":
-                bowler_utils.bowler_menu()
+                bowler_menu.bowler_menu()
             case "3":
                 team_menu.team_menu()
             case "4":
                 league_utils.league_menu()
             case "5":
-                alley_utils.alley_menu()
+                alley_menu.alley_menu()
             case "6":
                 season_utils.season_menu()
             case "7":
@@ -63,6 +63,7 @@ def main():
                 exit_prog = True
             case _:
                 print("not a valid input")
+
 
 if __name__ == "__main__":
     main()
