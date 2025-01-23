@@ -52,3 +52,18 @@ def get_all_alleys():
         return all_alleys
     finally:
         session.close()
+
+
+def delete_alley(alley_id):
+    session = db_session.create_session()
+    try:
+        alley = session.scalars(sa.select(Alley).where(Alley.id == alley_id)).unique().one_or_none()
+        if not alley:
+            return False
+        else:
+            session.delete(alley)
+            session.commit()
+            return True
+    finally:
+        session.close()
+

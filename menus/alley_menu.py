@@ -1,7 +1,7 @@
 import regex
 
 from utils.utils import parse_global_options, REqual
-from utils.alley_utils import get_alley_by_id, add_alley, modify_alley
+from utils.alley_utils import get_alley_by_id, add_alley, modify_alley, delete_alley
 
 
 def alley_menu():
@@ -9,7 +9,8 @@ def alley_menu():
     while not return_to_main:
         print("\n1 to add a new alley")
         print("2 to modify an existing alley")
-        print("press x to return to main menu")
+        print("3 to delete an alley")
+        print("press 'x' to return to main menu")
 
         user_choice = input(":").strip()
         if parse_global_options(user_choice):
@@ -25,7 +26,6 @@ def alley_menu():
                 if alley_regex:
                     alley_name = alley_regex.group(1).strip()
                     alley_city = alley_regex.group(2)
-                    print(f"what is this? {alley_city}")
                     if alley_city:
                         alley_city = alley_city.strip()
                     new_alley = add_alley(alley_name, alley_city)
@@ -34,6 +34,8 @@ def alley_menu():
                     print("not even sure how I managed, but that alley name doesn't work - try again")
             case "2":
                 modify_alley_menu()
+            case "3":
+                delete_alley_menu()
             case "x" | "X":
                 return_to_main = True
             case _:
@@ -100,4 +102,30 @@ def get_alley_or_city_menu(alley):
                 return_to_modification_menu = True
             case _:
                 print("that's an invalid entry, please try again")
+
+
+def delete_alley_menu():
+    # TODO: leagues need to have an associated alley at creation time, but alleys can be deleted and
+    # it has no effect on the associated leagues - should I do soemthing about that?
+    return_to_alley_menu = False
+    while not return_to_alley_menu:
+        print("\nenter the id of the alley to delete")
+        print("or 'x' to return to the previous menu")
+
+        user_input = input(":").strip()
+        if parse_global_options(user_input):
+            continue
+
+        match REqual(user_input):
+            case "x" | "X":
+                return_to_alley_menu = True
+            case r"^(\d+)$":
+                alley_match = regex.search(r"^(\d+)$", user_input)
+                if delete_alley(alley_match.group(1)):
+                    print("alley successfully deleted")
+                    return_to_alley_menu = True
+                else:
+                    print("that id was not found, please try again")
+            case _:
+                print("not a valid input, please try again")
 

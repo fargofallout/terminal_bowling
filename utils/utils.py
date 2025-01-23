@@ -1,13 +1,11 @@
-import sqlalchemy as sa
 import regex
 
-from data import db_session
-from data.game import Game
 from utils.team_utils import get_all_teams
 from utils.bowler_utils import get_all_bowlers
 from utils.alley_utils import get_all_alleys
 from utils.league_utils import get_all_leagues
 from utils.season_utils import get_all_seasons
+from utils.game_utils import get_all_games
 
 
 class REqual(str):
@@ -76,14 +74,6 @@ def parse_global_options(user_input):
         case _:
             return False
 
-
-def get_all_games():
-    session = db_session.create_session()
-    try:
-        all_games = session.scalars(sa.select(Game).order_by(Game.id)).unique().all()
-        return all_games
-    finally:
-        session.close()
 
 def parse_formula(formula):
     print(f"this is the formula I need to parse: {formula}")
