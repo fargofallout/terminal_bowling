@@ -2,7 +2,7 @@ import regex
 
 from utils.season_utils import get_season_by_id
 from utils.team_utils import get_team_by_id
-from utils.utils import parse_global_options
+from utils.utils import parse_global_options, output_to_multiple_columns
 from utils.bowler_utils import get_all_bowlers
 
 
@@ -51,12 +51,7 @@ def new_week_menu():
         print(f"this is team 2: {teams[1]}")
 
         all_bowlers = get_all_bowlers()
-        for each_bowler in all_bowlers:
-            print(each_bowler)
-        # CONTINUE HERE: need to provide a list of bowler next and get an input for all of them
-        # this is where things get complicated - I should have bowler associated with a team in some way,
-        # but I think that should be based on them having bowled with a team and not actually have there be a 
-        # foreign key relationship between bowler/team
+        output_to_multiple_columns(all_bowlers)
 
 
 def get_week():

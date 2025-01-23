@@ -224,3 +224,44 @@ def recursive_calc_function(token_list, bowler_average):
             # print(f"about to return - list to calc: {list_to_calculate}, calculated value: {return_value}")
             return return_value
 
+
+def output_to_multiple_columns(item_list, num_columns=3):
+    items_per_column = len(item_list) // num_columns
+    left_over = len(item_list) % num_columns
+    max_length = 0
+    print(f"items: {items_per_column}, left over: {left_over}, len: {max_length}")
+
+    print_list = []
+    for num in range(items_per_column):
+        print_list.append(list())
+    if left_over > 0:
+        print_list.append(list())
+
+    print(print_list)
+
+    row_counter = 0
+    for item_counter, each_item in enumerate(item_list):
+        if len(each_item.__str__()) > max_length:
+            max_length = len(each_item.__str__())
+
+        if row_counter == items_per_column:
+            if left_over > 0:
+                print_list[row_counter].append(each_item)
+                left_over -= 1
+                row_counter = 0
+            else:
+                print_list[0].append(each_item)
+                row_counter = 1
+
+        else:
+            print_list[row_counter].append(each_item)
+            row_counter += 1
+
+    print(print_list)
+    for each_list in print_list:
+        output_string = ""
+        for each_item in each_list:
+            output_string += f"{each_item.__str__(): <{max_length + 5}}"
+        print(output_string.strip())
+
+

@@ -21,9 +21,12 @@ def bowler_menu():
             case "1":
                 print("enter user name in format firstname lastname")
                 bowler_name = input(":").strip()
-                name_regex = regex.search(r"(\w+) (\w+)", bowler_name)
+                name_regex = regex.search(r"^([^\n ]+) ([^\n ]+)$", bowler_name)
                 if not name_regex:
                     print("inputted name is not in the correct format, please try again")
+                    print("(look, I know this is not robust and you can't have a space in a last name,")
+                    print("for instance, but I don't want to put a lot of effort into this part, so rather than")
+                    print("having 'Von Hansen' as the last name, just make it 'VonHanen')")
                 else:
                     first_name = name_regex.group(1)
                     last_name = name_regex.group(2)
@@ -77,7 +80,7 @@ def get_new_name_menu(bowler):
         user_choice = input(":").strip()
 
         match REqual(user_choice):
-            case r"\w+ \w+":
+            case r"^\w+ \w+$":
                 name_split = user_choice.split(" ")
                 new_bowler_name = modify_bowler(bowler.id, name_split[0], name_split[1])
                 if not new_bowler_name:
