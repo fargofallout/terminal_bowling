@@ -237,8 +237,6 @@ def output_to_multiple_columns(item_list, num_columns=3):
     if left_over > 0:
         print_list.append(list())
 
-    print(print_list)
-
     row_counter = 0
     for item_counter, each_item in enumerate(item_list):
         if len(each_item.__str__()) > max_length:
@@ -257,7 +255,6 @@ def output_to_multiple_columns(item_list, num_columns=3):
             print_list[row_counter].append(each_item)
             row_counter += 1
 
-    print(print_list)
     for each_list in print_list:
         output_string = ""
         for each_item in each_list:

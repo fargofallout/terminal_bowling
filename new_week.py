@@ -47,11 +47,20 @@ def new_week_menu():
         teams = get_teams()
         if not teams:
             continue
-        print(f"this is team 1: {teams[0]}")
-        print(f"this is team 2: {teams[1]}")
+        print(f"left team: {teams[0]}")
+        print(f"right team: {teams[1]}")
 
         all_bowlers = get_all_bowlers()
         output_to_multiple_columns(all_bowlers)
+
+        print("\nabove is a list of all bowlers (hopefully with some team info eventually)")
+        print("using the ids, enter the ids of all 10 (make this dynamic?) bowlers, separated by spaces")
+        print("starting with the first bowler on the left lane, then the second, etc., going down the list")
+        print("of bowlers on the left lane and then bowlers on the right lane")
+        print("handicaps will be entered later(?), and if a bowler's robot is bowling for them, that will")
+        print("be noted later")
+
+        bowler_list = get_bowler_ids()
 
 
 def get_week():
@@ -60,7 +69,7 @@ def get_week():
     while not return_to_main:
         print("\nthis is where I'd show you what the next week in this league is")
         print("but I can't really implement that until I have a week in the db,")
-        print("so you can't actually hit enter at the next prompt and accomplish anything - just enter a nmber for a new week")
+        print("so you can't actually hit enter at the next prompt and accomplish anything - just enter a number for a new week")
 
         print("\nto accept that week, just press 'enter'")
         print("otherwise, enter the week number here to input data for a specific week")
@@ -130,4 +139,11 @@ def get_teams():
 
         print("I guess they're valid?")
         return team_one, team_two
+
+
+def get_bowler_ids():
+    # TODO: if I wanted this to be flexible enough to accommodate leagues with different numbers of 
+    # bowlers per team, I'd have to do some checking here, such as making sure the number of bowlers
+    # entered divided by 2 equals the number per team specified in the league table
+    bowler_ids = input(":").strip()
 
