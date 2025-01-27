@@ -3,7 +3,7 @@ import regex
 from utils.season_utils import get_season_by_id
 from utils.team_utils import get_team_by_id
 from utils.utils import parse_global_options, output_to_multiple_columns
-from utils.bowler_utils import get_all_bowlers
+from utils.bowler_utils import get_all_bowlers, get_bowler_by_id
 
 
 def new_week_menu():
@@ -54,13 +54,19 @@ def new_week_menu():
         output_to_multiple_columns(all_bowlers)
 
         print("\nabove is a list of all bowlers (hopefully with some team info eventually)")
-        print("using the ids, enter the ids of all 10 (make this dynamic?) bowlers, separated by spaces")
+        print("using those ids, enter the ids of all 10 (make this dynamic?) bowlers, separated by spaces")
         print("starting with the first bowler on the left lane, then the second, etc., going down the list")
         print("of bowlers on the left lane and then bowlers on the right lane")
-        print("handicaps will be entered later(?), and if a bowler's robot is bowling for them, that will")
-        print("be noted later")
+        print("optionally, add a comman and a value for handiap after each bowler id, separated by spaces")
+        print("for example, this is an input of 8 bolwer ids:")
+        print("1 2 3 4 5 6 7 8")
+        print("and this is an input for 8 bowlers with their handicaps:")
+        print("1,10 2,50 3,22 4,30 5,0 6,11")
 
         bowler_list = get_bowler_ids()
+        if not bowler_list:
+            continue
+        print(f"just making sure: {bowler_list}")
 
 
 def get_week():
@@ -145,5 +151,49 @@ def get_bowler_ids():
     # TODO: if I wanted this to be flexible enough to accommodate leagues with different numbers of 
     # bowlers per team, I'd have to do some checking here, such as making sure the number of bowlers
     # entered divided by 2 equals the number per team specified in the league table
-    bowler_ids = input(":").strip()
+    return_to_prev_menu = False
+    while not return_to_prev_menu:
+        num_bowlers = 10
+        print("\ninput the bowler ids here")
+        bowler_ids = input(":").strip()
+
+        if parse_global_options(bowler_ids):
+            continue
+        if bowler_ids in ["x", "X"]:
+            return_to_prev_menu = True
+            continue
+
+        bowler_id_list = regex.split(r" +", bowler_ids)
+
+        if len(bowler_id_list) != num_bowlers:
+            print("you need to enter 10 bowler ids - please try again")
+            continue
+
+        has_invalid_entry = False
+        return_list = []
+        for each_id in bowler_id_list:
+            id_handicap_split = each_id.split(",")
+
+            if len(id_handicap_split) > 2:
+                print(f"{each_id} is not a valid entry")
+                has_invalid_entry = True
+                continue
+
+            the_bowler = get_bowler_by_id(id_handicap_split[0])
+            if not the_bowler:
+                has_invalid_entry = True
+                print(f"{each_id} is not a valid id")
+
+            if len(id_handicap_split) == 2 and not regex.search(r"^\d+$", id_handicap_split[1]):
+                print(f"{id_handicap_split[1]} is not a valid handicap, please try again")
+                has_invalid_entry = True
+                continue
+
+            return_list.append(id_handicap_split)
+
+        if has_invalid_entry:
+            continue
+
+        else:
+            return return_list
 

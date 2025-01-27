@@ -229,7 +229,6 @@ def output_to_multiple_columns(item_list, num_columns=3):
     items_per_column = len(item_list) // num_columns
     left_over = len(item_list) % num_columns
     max_length = 0
-    print(f"items: {items_per_column}, left over: {left_over}, len: {max_length}")
 
     print_list = []
     for num in range(items_per_column):
@@ -255,6 +254,7 @@ def output_to_multiple_columns(item_list, num_columns=3):
             print_list[row_counter].append(each_item)
             row_counter += 1
 
+    print("")
     for each_list in print_list:
         output_string = ""
         for each_item in each_list:
