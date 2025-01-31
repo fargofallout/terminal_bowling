@@ -28,6 +28,11 @@ def global_init(db_file):
     import data.alley
     import data.league
     import data.season
+    import data.no_handicap
+    import data.bowler_head_to_head_game
+    import data.head_to_head
+    import data.user_action_numbers
+    import data.head_to_head_game
 
     SqlAlchemyBase.metadata.create_all(engine)
 

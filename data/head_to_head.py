@@ -13,16 +13,21 @@ class Head_To_Head(SqlAlchemyBase):
     week_complete: orm.Mapped[bool]
 
     left_team_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("team_table.id"))
-    left_team: orm.Mapped["Team"] = orm.relationship(back_populates="head_to_head", lazy="joined")
+    # TODO: figure out if these relationships need to exist
+    # left_team: orm.Mapped["Team"] = orm.relationship(back_populates="head_to_head", lazy="joined")
     right_team_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("team_table.id"))
-    right_team: orm.Mapped["Team"] = orm.relationship(back_populates="head_to_head", lazy="joined")
+    # right_team: orm.Mapped["Team"] = orm.relationship(back_populates="head_to_head", lazy="joined")
 
     season_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("season_table.id"))
     season: orm.Mapped["Season"] = orm.relationship(back_populates="head_to_head", lazy="joined")
 
-    user_action_numbers: orm.Mapped[list["User_Action_Numbers"]] = orm.relationship(back_populates="Head_To_Head", lazy="joined")
+    user_action_numbers: orm.Mapped[list["User_Action_Numbers"]] = orm.relationship(back_populates="head_to_head", lazy="joined")
 
-    no_handicap: orm.Mapped[list["No_Handicap"]] = orm.relationship(back_populates="Head_To_Head", lazy="joined")
+    no_handicap: orm.Mapped[list["No_Handicap"]] = orm.relationship(back_populates="head_to_head", lazy="joined")
+
+    head_to_head_games: orm.Mapped[list["Head_To_Head_Game"]] = orm.relationship(back_populates="head_to_head", lazy="joined")
+
+    games: orm.Mapped[list["Game"]] = orm.relationship(back_populates="head_to_head", lazy="joined")
 
     def __repr__(self):
         return f"wtf"
