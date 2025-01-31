@@ -19,7 +19,7 @@ class Head_To_Head(SqlAlchemyBase):
     # right_team: orm.Mapped["Team"] = orm.relationship(back_populates="head_to_head", lazy="joined")
 
     season_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("season_table.id"))
-    season: orm.Mapped["Season"] = orm.relationship(back_populates="head_to_head", lazy="joined")
+    season: orm.Mapped["Season"] = orm.relationship(back_populates="head_to_heads", lazy="joined")
 
     user_action_numbers: orm.Mapped[list["User_Action_Numbers"]] = orm.relationship(back_populates="head_to_head", lazy="joined")
 

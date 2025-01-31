@@ -18,6 +18,8 @@ class Season(SqlAlchemyBase):
     league_id: str = sa.Column(sa.String, sa.ForeignKey("league_table.id"))
     league: Mapped["League"] = relationship(back_populates="season", lazy="joined")
 
+    head_to_heads: Mapped["Head_To_Head"] = relationship(back_populates="season", lazy="joined")
+
     def __repr__(self):
         return f"{self.id}, season: {self.season_years}, "\
         f"handicap formula: {self.handicap_formula}, "\
