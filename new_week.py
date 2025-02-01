@@ -50,6 +50,9 @@ def new_week_menu():
         print(f"left team: {teams[0]}")
         print(f"right team: {teams[1]}")
 
+        # CONTINUE HERE: create the head-to-head, and then determine what's next - need to figure out
+        # how to handle continuing a head-to-head that's in progress, and if everything from this point forward 
+        # takes that into consideration
         all_bowlers = get_all_bowlers()
         output_to_multiple_columns(all_bowlers)
 

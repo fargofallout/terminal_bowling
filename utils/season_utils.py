@@ -9,7 +9,12 @@ def create_season(season_years, handicap_formula, league_id, games_per_week, pla
     # TODO: should I do this here, or should I do it before calling the function? I should probably do it before calling it, right? 
     formula_as_json = json.dumps(handicap_formula)
     print(f"this is the json version of the token list: {handicap_formula}")
-    new_season = Season(season_years=season_years, handicap_formula=formula_as_json, league_id=league_id, games_per_week=games_per_week, players_per_team=players_per_team)
+    new_season = Season(season_years=season_years,
+                        handicap_formula=formula_as_json,
+                        league_id=league_id,
+                        games_per_week=games_per_week,
+                        players_per_team=players_per_team,
+                        is_complete=False)
     session = db_session.create_session()
 
     try:

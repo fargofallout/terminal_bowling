@@ -11,7 +11,7 @@ class Game(SqlAlchemyBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     score: orm.Mapped[int]
     handicap: orm.Mapped[Optional[int]]
-    # game_number: orm.Mapped[Optional[int]]
+    game_number: orm.Mapped[Optional[int]]
     # position: orm.Mapped[Optional[int]]
     is_robot_game: orm.Mapped[Optional[bool]]
 
