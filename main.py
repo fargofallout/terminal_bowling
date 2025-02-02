@@ -3,7 +3,7 @@ from pathlib import Path
 
 import data.db_session as db_session
 from utils.utils import parse_global_options
-from new_week import new_week_menu
+from new_week import create_new_week, display_week, write_to_screen
 from menus import team_menu, bowler_menu, alley_menu, league_menu, season_menu, game_menu
 
 
@@ -35,6 +35,7 @@ def main():
         print("5 for alley menu")
         print("6 for season menu")
         print("7 for game menu (probably only for my games outside of a head-to-head?)")
+        print("w to write table to screen during testing")
         print("x to exit")
 
         user_choice = input(":").strip()
@@ -45,7 +46,8 @@ def main():
 
         match user_choice:
             case "1":
-                new_week_menu()
+                new_head_to_head = create_new_week()
+                display_week(new_head_to_head)
             case "2":
                 bowler_menu.bowler_menu()
             case "3":
@@ -58,6 +60,8 @@ def main():
                 season_menu.season_menu()
             case "7":
                 game_menu.game_menu()
+            case "w":
+                write_to_screen()
             case "x" | "X":
                 exit_prog = True
             case _:

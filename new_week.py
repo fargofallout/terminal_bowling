@@ -4,9 +4,10 @@ from utils.season_utils import get_season_by_id
 from utils.team_utils import get_team_by_id
 from utils.utils import parse_global_options, output_to_multiple_columns
 from utils.bowler_utils import get_all_bowlers, get_bowler_by_id
+from utils.head_to_head_utils import create_head_to_head
 
 
-def new_week_menu():
+def create_new_week():
     return_to_main = False
 
     print("\n****************************")
@@ -70,6 +71,16 @@ def new_week_menu():
         if not bowler_list:
             continue
         print(f"just making sure: {bowler_list}")
+
+        new_head_to_head = create_head_to_head(new_week, teams[0].id, teams[1].id, the_season.id)
+        if not new_head_to_head:
+            print("not sure what went wrong, but something isn't cool")
+            continue
+        return new_head_to_head
+
+
+def display_week(head_to_head, include_options=False):
+    pass
 
 
 def get_week():
@@ -199,4 +210,46 @@ def get_bowler_ids():
 
         else:
             return return_list
+
+
+# def write_to_screen(**kwargs):
+def write_to_screen(head_to_head_id=0):
+    screen_width = 178
+
+    characters_per_name = 23
+    characters_per_handicap = 4
+    characters_per_scratch_game = 4
+    characters_per_handicap_game = 4
+    characters_per_scratch_total = 5
+    characters_per_handicap_total = 4
+    characters_per_points = 3
+
+    # this is dummy data
+    left_lane_num = 31
+    num_games = 3
+    left_team = "big ern"
+    right_team = "pin tillers"
+    left_bowlers = [["christian schoeller", 30], ["tony hertzkowitz", 55], ["duke dancombe", 10], ["dana dancombe", 5], ["mike vacha", 50]]
+    right_bowlers = [["jeff sis", 2], ["mike mingo", 3], ["rick aguliar", 10], ["bill vitt", 10], ["brian manchura", 0]]
+
+    name_width = ((characters_per_name + 2) * 2) + 2
+    hdcp_width = ((characters_per_handicap + 2) * 2) + 2
+    games_width = characters_per_scratch_game + characters_per_handicap_game + 3 + num_games
+    totals_width = 
+    
+    # CONTINUE HERE: ugh, am I overcomplicating this? I think I'm calculating for both halves in some cases, but 
+    # only one half in other cases
+
+
+    '''
+    data to send:
+    left lane number
+    two team names
+    num players per team? (do I need to be this flexible?)
+    players/handicaps/scores
+    num games per night?
+
+    '''
+    for num in range(screen_width):
+        print("-", end="")
 
