@@ -216,13 +216,16 @@ def get_bowler_ids():
 def write_to_screen(head_to_head_id=0):
     screen_width = 178
 
-    characters_per_name = 23
+    characters_per_name = 25
     characters_per_handicap = 4
     characters_per_scratch_game = 4
     characters_per_handicap_game = 4
     characters_per_scratch_total = 5
     characters_per_handicap_total = 4
     characters_per_points = 3
+
+    cell_padding = 2
+    game_padding = 3
 
     # this is dummy data
     left_lane_num = 31
@@ -232,24 +235,100 @@ def write_to_screen(head_to_head_id=0):
     left_bowlers = [["christian schoeller", 30], ["tony hertzkowitz", 55], ["duke dancombe", 10], ["dana dancombe", 5], ["mike vacha", 50]]
     right_bowlers = [["jeff sis", 2], ["mike mingo", 3], ["rick aguliar", 10], ["bill vitt", 10], ["brian manchura", 0]]
 
-    name_width = ((characters_per_name + 2) * 2) + 2
-    hdcp_width = ((characters_per_handicap + 2) * 2) + 2
-    games_width = characters_per_scratch_game + characters_per_handicap_game + 3 + num_games
-    totals_width = 
-    
-    # CONTINUE HERE: ugh, am I overcomplicating this? I think I'm calculating for both halves in some cases, but 
-    # only one half in other cases
+    name_width = ((characters_per_name + cell_padding) * 2) + 2
+    hdcp_width = ((characters_per_handicap + cell_padding) * 2) + 2
+    games_width = (((characters_per_scratch_game + characters_per_handicap_game + game_padding) * num_games) + (num_games)) * 2
+    totals_width = ((characters_per_scratch_total + characters_per_handicap_total + game_padding + 1) * 2)
+    points_width = (characters_per_points + cell_padding + 1) * 2
 
+    total_width = name_width + hdcp_width + games_width + totals_width + points_width
+    lane_padding = (total_width // 2) - 8
+    team_padding = (total_width // 2) - 3
 
-    '''
-    data to send:
-    left lane number
-    two team names
-    num players per team? (do I need to be this flexible?)
-    players/handicaps/scores
-    num games per night?
+    divider_line = f"|{'-' * total_width}|"
+    print(divider_line)
+    print(f"| Lane {left_lane_num: <{lane_padding}} || Lane {left_lane_num + 1: <{lane_padding}} |")
+    print(divider_line)
+    print(f"| {left_team: <{team_padding}} || {right_team: <{team_padding}} |")
+    print(divider_line)
 
-    '''
-    for num in range(screen_width):
-        print("-", end="")
+    # TODO: this should maybe be a function rather than pretty much the same code three times
+    for name_position, name in enumerate(left_bowlers):
 
+        if name_position == 0:
+            left_string = "|"
+            right_string = "|"
+
+            left_string += f" {'Name': <{characters_per_name}} |"
+            right_string += f" {'Name': <{characters_per_name}} |"
+
+            left_string += f" {'HDCP': <{characters_per_handicap}} |"
+            right_string += f" {'HDCP': <{characters_per_handicap}} |"
+
+            for each_game in range(num_games):
+                left_string += f" {'1st': <{characters_per_scratch_game}} {'hdcp': <{characters_per_handicap_game}} |"
+                right_string += f" {'1st': <{characters_per_scratch_game}} {'hdcp': <{characters_per_handicap_game}} |"
+
+            left_string += f" {'Total': <{characters_per_scratch_total}} {'hdcp': <{characters_per_handicap_total}} |"
+            right_string += f" {'Total': <{characters_per_scratch_total}} {'hdcp': <{characters_per_handicap_total}} |"
+
+            left_string += f" {'Pts':<{characters_per_points}} |"
+            right_string += f" {'Pts':<{characters_per_points}} |"
+
+            print(f"{left_string}{right_string}")
+            print(divider_line)
+
+        left_string = "|"
+        right_string = "|"
+
+        # Names
+        left_string += f" {left_bowlers[name_position][0]: <{characters_per_name}} |"
+        right_string += f" {right_bowlers[name_position][0]: <{characters_per_name}} |"
+
+        # handicaps
+        left_string += f" {50: <{characters_per_handicap}} |"
+        right_string += f" {50: <{characters_per_handicap}} |"
+
+        # games
+        for each_game in range(num_games):
+            left_string += f" {'200': <{characters_per_scratch_game}} {'302': <{characters_per_handicap_game}} |"
+            right_string += f" {'200': <{characters_per_scratch_game}} {'302': <{characters_per_handicap_game}} |"
+
+        # totals
+        left_string += f" {'630': <{characters_per_scratch_total}} {'799': <{characters_per_handicap_total}} |"
+        right_string += f" {'630': <{characters_per_scratch_total}} {'799': <{characters_per_handicap_total}} |"
+
+        # points
+        left_string += f" {'8':<{characters_per_points}} |"
+        right_string += f" {'8':<{characters_per_points}} |"
+
+        print(f"{left_string}{right_string}")
+
+    print(divider_line)
+
+    left_string = "|"
+    right_string = "|"
+
+    # Names
+    left_string += f" {'Total': <{characters_per_name}} |"
+    right_string += f" {'Total': <{characters_per_name}} |"
+
+    # handicaps
+    left_string += f" {190: <{characters_per_handicap}} |"
+    right_string += f" {109: <{characters_per_handicap}} |"
+
+    # games
+    for each_game in range(num_games):
+        left_string += f" {'1010': <{characters_per_scratch_game}} {'999': <{characters_per_handicap_game}} |"
+        right_string += f" {'998': <{characters_per_scratch_game}} {'1400': <{characters_per_handicap_game}} |"
+
+    # totals
+    left_string += f" {'3500': <{characters_per_scratch_total}} {'4800': <{characters_per_handicap_total}} |"
+    right_string += f" {'3600': <{characters_per_scratch_total}} {'4200': <{characters_per_handicap_total}} |"
+
+    # points
+    left_string += f" {'':<{characters_per_points}} |"
+    right_string += f" {'':<{characters_per_points}} |"
+
+    print(f"{left_string}{right_string}")
+    print(divider_line)
