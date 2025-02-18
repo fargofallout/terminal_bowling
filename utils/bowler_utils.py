@@ -6,13 +6,13 @@ from data import db_session
 
 
 def create_bowler(first_name, last_name):
-    new_bolwer = Bowler(first_name=first_name, last_name=last_name)
+    new_bowler = Bowler(first_name=first_name, last_name=last_name)
     session = db_session.create_session()
 
     try:
-        session.add(new_bolwer)
+        session.add(new_bowler)
         session.commit()
-        return f"{new_bolwer.id} {new_bolwer.first_name} {new_bolwer.last_name}"
+        return f"{new_bowler.id} {new_bowler.first_name} {new_bowler.last_name}"
     finally:
         session.close()
 

@@ -3,7 +3,7 @@ import sqlalchemy.orm as orm
 
 from data.model_base import SqlAlchemyBase
 
-
+# main table for a given week of bowling
 class Head_To_Head(SqlAlchemyBase):
     __tablename__ = "head_to_head_table"
 

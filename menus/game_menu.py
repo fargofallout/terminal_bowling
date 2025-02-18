@@ -88,8 +88,8 @@ def modify_game_menu():
                 game_id = int(game_match.group(1))
                 bowler_id = game_match.group(2)
                 if bowler_id != "_":
-                    bolwer = get_bowler_by_id(bowler_id)
-                    if not bolwer:
+                    bowler = get_bowler_by_id(bowler_id)
+                    if not bowler:
                         print("that bowler doesn't exist?")
                         continue
                 score = game_match.group(3)

@@ -24,4 +24,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    pass
+    op.drop_column("head_to_head_table", "week_number")
+    op.drop_column("head_to_head_table", "week_complete")

@@ -8,7 +8,7 @@ def bowler_menu():
     return_to_main = False
 
     while not return_to_main:
-        print("\n1 to add a new bolwer")
+        print("\n1 to add a new bowler")
         print("2 to modify a bowler")
         print("3 to delete a bowler")
         print("x to exit")
@@ -32,9 +32,9 @@ def bowler_menu():
                     last_name = name_regex.group(2)
 
                     new_bowler = create_bowler(first_name, last_name)
-                    print(f"here's the new bolwer: {new_bowler}")
+                    print(f"here's the new bowler: {new_bowler}")
             case "2":
-                modify_bolwer_menu()
+                modify_bowler_menu()
             case "3":
                 delete_bowler_menu()
             case "x" | "X":
@@ -43,7 +43,7 @@ def bowler_menu():
                 print("not a valid choice, please try again")
 
 
-def modify_bolwer_menu():
+def modify_bowler_menu():
     return_to_bowler_menu = False
 
     while not return_to_bowler_menu:

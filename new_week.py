@@ -51,9 +51,6 @@ def create_new_week():
         print(f"left team: {teams[0]}")
         print(f"right team: {teams[1]}")
 
-        # CONTINUE HERE: create the head-to-head, and then determine what's next - need to figure out
-        # how to handle continuing a head-to-head that's in progress, and if everything from this point forward 
-        # takes that into consideration
         all_bowlers = get_all_bowlers()
         output_to_multiple_columns(all_bowlers)
 
@@ -62,7 +59,7 @@ def create_new_week():
         print("starting with the first bowler on the left lane, then the second, etc., going down the list")
         print("of bowlers on the left lane and then bowlers on the right lane")
         print("optionally, add a comman and a value for handiap after each bowler id, separated by spaces")
-        print("for example, this is an input of 8 bolwer ids:")
+        print("for example, this is an input of 8 bowler ids:")
         print("1 2 3 4 5 6 7 8")
         print("and this is an input for 8 bowlers with their handicaps:")
         print("1,10 2,50 3,22 4,30 5,0 6,11")
@@ -73,6 +70,7 @@ def create_new_week():
         print(f"just making sure: {bowler_list}")
 
         new_head_to_head = create_head_to_head(new_week, teams[0].id, teams[1].id, the_season.id)
+        # need to create bowler_head_to_head_game, head_to_head_game, no_handicap
         if not new_head_to_head:
             print("not sure what went wrong, but something isn't cool")
             continue
@@ -214,6 +212,42 @@ def get_bowler_ids():
 
 # def write_to_screen(**kwargs):
 def write_to_screen(head_to_head_id=0):
+
+    def write_data_to_table(left_dict, right_dict):
+        # left_dict = {"name": "Name", "handicap": "HDCP", "games": [[200, 250], [100, 150], [50, 100]], "total": [599, 666], "points": "Pts"}
+        left_string = "|"
+        right_string = "|"
+
+        left_string += f" {left_dict['name']: <{characters_per_name}} |"
+        right_string += f" {right_dict['name']: <{characters_per_name}} |"
+
+        left_string += f" {left_dict['handicap']: <{characters_per_handicap}} |"
+        right_string += f" {right_dict['handicap']: <{characters_per_handicap}} |"
+
+        for each_game in left_dict["games"]:
+            left_string += f" {each_game[0]: <{characters_per_scratch_game}} {each_game[1] :<{characters_per_handicap_game}} |"
+
+        for each_game in right_dict["games"]:
+            right_string += f" {each_game[0]: <{characters_per_scratch_game}} {each_game[1] :<{characters_per_handicap_game}} |"
+
+        left_string += f" {left_dict['total'][0]: <{characters_per_scratch_total}} {left_dict['total'][1]: <{characters_per_handicap_total}} |"
+        right_string += f" {right_dict['total'][0]: <{characters_per_scratch_total}} {right_dict['total'][1]: <{characters_per_handicap_total}} |"
+
+        left_string += f" {left_dict['points']: <{characters_per_points}} |"
+        right_string += f" {right_dict['points']: <{characters_per_points}} |"
+
+        print(f"{left_string}{right_string}")
+
+    '''
+    ansi escape codes for colors:
+    grey: \033[90m'
+    red: \033[91m'
+    green: \033[92m'
+    yellow: \033[93m'
+    blue: \033[94m'
+    purple: \033[95m'
+    cyan: \033[96m'
+    '''
     screen_width = 178
 
     characters_per_name = 25
@@ -252,66 +286,39 @@ def write_to_screen(head_to_head_id=0):
     print(f"| {left_team: <{team_padding}} || {right_team: <{team_padding}} |")
     print(divider_line)
 
-    # TODO: this should maybe be a function rather than pretty much the same code three times
+    left_dict = {"name": "Name", "handicap": "hdcp", "games": [["1st", "hdcp"], ["2nd", "hdcp"], ["3rd", "hdcp"]], "total": ["Total", "hdcp"], "points": "Pts"}
+    right_dict = {"name": "Name", "handicap": "hdcp", "games": [["1st", "hdcp"], ["2nd", "hdcp"], ["3rd", "hdcp"]], "total": ["Total", "hdcp"], "points": "Pts"}
+
+    write_data_to_table(left_dict, right_dict)
+
+    score_to_display = 110
+    base_handicap = 10
     for name_position, name in enumerate(left_bowlers):
 
-        if name_position == 0:
-            left_string = "|"
-            right_string = "|"
+        print(divider_line)
 
-            left_string += f" {'Name': <{characters_per_name}} |"
-            right_string += f" {'Name': <{characters_per_name}} |"
+        total_scratch = score_to_display * 3
+        total_handicap = total_scratch + (base_handicap * 3)
+        left_dict = {"name": name[0], "handicap": name[1], "games": [[score_to_display, base_handicap], [score_to_display, base_handicap], [score_to_display, base_handicap]], "total": [total_scratch, total_handicap], "points": 4}
+        score_to_display += 10
+        base_handicap += 5
+        total_scratch = score_to_display * 3
+        total_handicap = total_scratch + (base_handicap * 3)
+        right_dict = {"name": right_bowlers[name_position][0], "handicap": right_bowlers[name_position][1], "games": [[score_to_display, base_handicap], [score_to_display, base_handicap], [score_to_display, base_handicap]], "total": [total_scratch, total_handicap], "points": 4}
 
-            left_string += f" {'HDCP': <{characters_per_handicap}} |"
-            right_string += f" {'HDCP': <{characters_per_handicap}} |"
-
-            for each_game in range(num_games):
-                left_string += f" {'1st': <{characters_per_scratch_game}} {'hdcp': <{characters_per_handicap_game}} |"
-                right_string += f" {'1st': <{characters_per_scratch_game}} {'hdcp': <{characters_per_handicap_game}} |"
-
-            left_string += f" {'Total': <{characters_per_scratch_total}} {'hdcp': <{characters_per_handicap_total}} |"
-            right_string += f" {'Total': <{characters_per_scratch_total}} {'hdcp': <{characters_per_handicap_total}} |"
-
-            left_string += f" {'Pts':<{characters_per_points}} |"
-            right_string += f" {'Pts':<{characters_per_points}} |"
-
-            print(f"{left_string}{right_string}")
-            print(divider_line)
-
-        left_string = "|"
-        right_string = "|"
-
-        # Names
-        left_string += f" {left_bowlers[name_position][0]: <{characters_per_name}} |"
-        right_string += f" {right_bowlers[name_position][0]: <{characters_per_name}} |"
-
-        # handicaps
-        left_string += f" {50: <{characters_per_handicap}} |"
-        right_string += f" {50: <{characters_per_handicap}} |"
-
-        # games
-        for each_game in range(num_games):
-            left_string += f" {'200': <{characters_per_scratch_game}} {'302': <{characters_per_handicap_game}} |"
-            right_string += f" {'200': <{characters_per_scratch_game}} {'302': <{characters_per_handicap_game}} |"
-
-        # totals
-        left_string += f" {'630': <{characters_per_scratch_total}} {'799': <{characters_per_handicap_total}} |"
-        right_string += f" {'630': <{characters_per_scratch_total}} {'799': <{characters_per_handicap_total}} |"
-
-        # points
-        left_string += f" {'8':<{characters_per_points}} |"
-        right_string += f" {'8':<{characters_per_points}} |"
-
-        print(f"{left_string}{right_string}")
+        write_data_to_table(left_dict, right_dict)
 
     print(divider_line)
+
+    left_dict = {"name": "Team Totals", "handicap": "250", "games": [[1000, 1500], [1000, 1500], [900, 950]], "total": [3500, 4500], "points": ""}
+    right_dict = {"name": "Team Totals", "handicap": "250", "games": [[1000, 1500], [1000, 1500], [900, 950]], "total": [3500, 4500], "points": ""}
 
     left_string = "|"
     right_string = "|"
 
     # Names
-    left_string += f" {'Total': <{characters_per_name}} |"
-    right_string += f" {'Total': <{characters_per_name}} |"
+    left_string += f" {'Team Totals': <{characters_per_name}} |"
+    right_string += f" {'Team Totals': <{characters_per_name}} |"
 
     # handicaps
     left_string += f" {190: <{characters_per_handicap}} |"
@@ -332,3 +339,7 @@ def write_to_screen(head_to_head_id=0):
 
     print(f"{left_string}{right_string}")
     print(divider_line)
+    print(divider_line)
+
+
+
