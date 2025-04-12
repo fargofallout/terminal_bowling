@@ -24,4 +24,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    pass
+    op.drop_column("season_table", "games_per_week")
+    op.drop_column("season_table", "players_per_team")

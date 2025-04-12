@@ -20,9 +20,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.add_column("head_to_head_game_table", sa.Column("game_number", sa.Integer))
-    op.add_column("bowler_head_to_head_game", sa.Column("bowler_head_to_head_game_id", sa.Integer, sa.ForeignKey("head_to_head_game_table.id")))
+    op.add_column("bowler_head_to_head_game_table", sa.Column("head_to_head_game_id", sa.Integer, sa.ForeignKey("head_to_head_game_table.id")))
 
 
 def downgrade() -> None:
     op.drop_column("head_to_head_game_table", "game_number")
-    op.drop_column("bowler_head_to_head_game", "bowler_head_to_head_game_id")
+    op.drop_column("bowler_head_to_head_game_table", "head_to_head_game_id")

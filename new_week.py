@@ -7,6 +7,25 @@ from utils.bowler_utils import get_all_bowlers, get_bowler_by_id
 from utils.head_to_head_utils import create_head_to_head
 
 
+def new_week_loop(head_to_head):
+    # continue here: been so long since I worked on this, I forgot what I was thinking
+    # once the head_to_head has been created, the next step is to display it, which I was working on,
+    # but this loop needs to handle giving the display function information to display, and I forgot I had
+    # created the user_action_numbers table - I think it makes sense to create a fuction where 
+    # the action numbers are generated and given back to this function, and then.....I don't know for sure
+    # ---- send something like {"teams": [[1, big ern], [2, bogarts]], "bowlers": [[4, tony], [5, christian]]}, etc.
+    # maybe split those into right and left, and make them lists of dicts or something
+    # the numbers there would correspond to action_number in the action numbers table
+    # so when a number is entered, a lookup is performed on the head_to_head foreign key plus the action_number
+    # to figure out what is being changed
+    # 
+    #
+    # also, this means I need to create all of the individual games first, because they need to all be 
+    # modifiable from the table interface, so I guess THAT'S the next step - implement the funcionality to 
+    # create all games and everything else related to the head_to_head
+    pass
+
+
 def create_new_week():
     return_to_main = False
 
@@ -54,14 +73,16 @@ def create_new_week():
         all_bowlers = get_all_bowlers()
         output_to_multiple_columns(all_bowlers)
 
+        # TODO: I don't know when this stuff will be implemented, but this is a reminder to make it so 
+        # player positions can be swapped after they're input, which is probably going to be a complicated process
         print("\nabove is a list of all bowlers (hopefully with some team info eventually)")
         print("using those ids, enter the ids of all 10 (make this dynamic?) bowlers, separated by spaces")
         print("starting with the first bowler on the left lane, then the second, etc., going down the list")
         print("of bowlers on the left lane and then bowlers on the right lane")
-        print("optionally, add a comman and a value for handiap after each bowler id, separated by spaces")
+        print("optionally, add a comma and a value for handicap after each bowler id, separated by spaces")
         print("for example, this is an input of 8 bowler ids:")
         print("1 2 3 4 5 6 7 8")
-        print("and this is an input for 8 bowlers with their handicaps:")
+        print("and this is an input for 6 bowlers with their handicaps:")
         print("1,10 2,50 3,22 4,30 5,0 6,11")
 
         bowler_list = get_bowler_ids()

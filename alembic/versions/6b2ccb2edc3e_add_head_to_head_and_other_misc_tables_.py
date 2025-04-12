@@ -19,10 +19,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column("game_table", sa.Column("head_to_head_id", sa.String))
-    op.add_column("game_table", sa.Column("team_id", sa.Integer))
-    op.drop_column("game_table", "game_number")
-
     op.create_table("no_handicap_table",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("head_to_head_id", sa.Integer, sa.ForeignKey("head_to_head_table.id")),
@@ -63,6 +59,18 @@ def upgrade() -> None:
         sa.Column("right_bowler_id", sa.Integer, sa.ForeignKey("bowler_table.id")),
         sa.Column("head_to_head_id", sa.Integer, sa.ForeignKey("head_to_head_table.id")))
 
+    op.add_column("game_table", sa.Column("head_to_head_id", sa.String, sa.ForeignKey("head_to_head_table.id")))
+    op.add_column("game_table", sa.Column("team_id", sa.Integer, sa.ForeignKey("team_table.id")))
+    op.drop_column("game_table", "game_number")
+
 
 def downgrade() -> None:
-    pass
+    op.drop_column("game_table", "head_to_head_id")
+    op.drop_column("game_table", "team_id")
+    op.drop_column("game_table", "game_number")
+
+    op.drop_table("no_handicap_table")
+    op.drop_table("head_to_head_table")
+    op.drop_table("head_to_head_game_table")
+    op.drop_table("user_action_numbers_table")
+    op.drop_table("bowler_head_to_head_game_table")

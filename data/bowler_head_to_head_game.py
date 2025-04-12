@@ -30,3 +30,5 @@ class Bowler_Head_To_Head_Game(SqlAlchemyBase):
     head_to_head_game_id: orm.Mapped[int] = orm.mapped_column(sa.ForeignKey("head_to_head_game_table.id"))
     head_to_head_game: orm.Mapped["Head_To_Head_Game"] = orm.relationship(back_populates="bowler_head_to_head_games", lazy="joined")
 
+    games: orm.Mapped["Game"] = orm.relationship(back_populates="bowler_head_to_head_game")
+

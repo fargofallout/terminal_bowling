@@ -23,4 +23,4 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    pass
+    op.drop_column("game_table", "is_robot_game")
